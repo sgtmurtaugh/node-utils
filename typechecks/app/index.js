@@ -2,6 +2,42 @@
 
 const config = require('config');
 
+const TYPE_ARRAY = 'array';
+const TYPE_ARRAY_OBJECT = '[object Array]';
+const TYPE_BIGINT = 'bigint';
+const TYPE_BIGINT_OBJECT = '[object BigInt]';
+const TYPE_BOOLEAN = 'boolean';
+const TYPE_BOOLEAN_OBJECT = '[object Boolean]';
+const TYPE_DATE = 'date';
+const TYPE_DATE_OBJECT = '[object Date]';
+const TYPE_ERROR = 'error';
+const TYPE_ERROR_OBJECT = '[object Error]';
+const TYPE_FUNCTION = 'function';
+const TYPE_FUNCTION_OBJECT = '[object Function]';
+const TYPE_GENERATOR_FUNCTION = 'generatorfunction';
+const TYPE_GENERATOR_FUNCTION_OBJECT = '[object GeneratorFunction]';
+const TYPE_MAP = 'map';
+const TYPE_MAP_OBJECT = '[object Map]';
+const TYPE_NULL = 'null';
+const TYPE_NUMBER = 'number';
+const TYPE_NUMBER_OBJECT = '[object Number]';
+const TYPE_OBJECT = 'object';
+const TYPE_OBJECT_OBJECT = '[object Object]';
+const TYPE_REGEXP = 'regexp';
+const TYPE_REGEXP_OBJECT = '[object RegExp]';
+const TYPE_SET = 'set';
+const TYPE_SET_OBJECT = '[object Set]';
+const TYPE_STRING = 'string';
+const TYPE_STRING_OBJECT = '[object String]';
+const TYPE_SYMBOL = 'symbol';
+const TYPE_SYMBOL_OBJECT = '[object Symbol]';
+const TYPE_UNDEFINED = 'undefined';
+const TYPE_UNKNOWN = 'unknown';
+const TYPE_WEAKMAP = 'weakmap';
+const TYPE_WEAKMAP_OBJECT = '[object WeakMap]';
+const TYPE_WEAKSET = 'weakset';
+const TYPE_WEAKSET_OBJECT = '[object WeakSet]';
+
 module.exports = {
 
 	/**
@@ -63,59 +99,62 @@ module.exports = {
 	 */
 	'typeOf': function (obj) {
 		if (this.isUndefined(obj)) {
-			return 'undefined';
+			return TYPE_UNDEFINED;
 		}
 		else if (this.isNull(obj)) {
-			return 'null';
+			return TYPE_NULL;
 		}
 		else {
 			// primitive types
-			if (this.isBoolean(obj)) {
-				return 'boolean';
+			if (this.isBigInt(obj)) {
+				return TYPE_BIGINT;
 			}
-			else if (this.isBigInt(obj)) {
-				return 'bigint';
+			else if (this.isBoolean(obj)) {
+				return TYPE_BOOLEAN;
 			}
 			else if (this.isNumeric(obj)) {
-				return 'number';
+				return TYPE_NUMBER;
 			}
 			else if (this.isString(obj)) {
-				return 'string';
+				return TYPE_STRING;
 			}
 			else if (this.isSymbol(obj)) {
-				return 'symbol';
+				return TYPE_SYMBOL;
 			}
 			else if (this.isArray(obj)) {
-				return 'array';
+				return TYPE_ARRAY;
 			}
 			else if (this.isFunction(obj)) {
-				return 'function';
+				return TYPE_FUNCTION;
 			}
 			else if (this.isObject(obj)) {
 				if (this.isDate(obj)) {
-					return 'date';
+					return TYPE_DATE;
+				}
+				else if (this.isError(obj)) {
+					return TYPE_ERROR;
 				}
 				else if (this.isMap(obj)) {
-					return 'map';
+					return TYPE_MAP;
 				}
 				else if (this.isRegExp(obj)) {
-					return 'regexp';
+					return TYPE_REGEXP;
 				}
 				else if (this.isSet(obj)) {
-					return 'set';
+					return TYPE_SET;
 				}
 				else if (this.isWeakMap(obj)) {
-					return 'weakmap';
+					return TYPE_WEAKMAP;
 				}
 				else if (this.isWeakSet(obj)) {
-					return 'weakset';
+					return TYPE_WEAKSET;
 				}
 				else {
 					return (typeof obj);
 				}
 			}
 			else {
-				return 'unknown';
+				return TYPE_UNKNOWN;
 			}
 		}
 	},
@@ -137,7 +176,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'boolean' otherwise false.
 	 */
 	'isBoolean': function (obj) {
-		return ('boolean' === typeof obj || '[object Boolean]' === toString.call(obj));
+		return (TYPE_BOOLEAN === typeof obj || TYPE_BOOLEAN_OBJECT === toString.call(obj));
 	},
 
 	/**
@@ -157,7 +196,7 @@ module.exports = {
 	 * <p>TODO
 	 */
 	'isBigInt': function (obj) {
-		return ('bigint' === typeof obj || '[object BigInt]' === toString.call(obj));
+		return (TYPE_BIGINT === typeof obj || TYPE_BIGINT_OBJECT === toString.call(obj));
 	},
 
 	/**
@@ -167,7 +206,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'date' otherwise false.
 	 */
 	'isDate': function (obj) {
-		return (this.isObject(obj) && (obj instanceof Date));
+		return (TYPE_DATE === typeof obj || TYPE_DATE_OBJECT === toString.call(obj));
 	},
 
 	/**
@@ -184,8 +223,20 @@ module.exports = {
 		else if (this.isArray(obj)) {
 			return (obj.length === 0);
 		}
+		else if (this.isMap(obj)) {
+			return (obj.length === 0);
+		}
+		else if (this.isSet(obj)) {
+			return (obj.length === 0);
+		}
 		else if (this.isString(obj)) {
 			return (obj.trim().length === 0);
+		}
+		else if (this.isWeakMap(obj)) {
+			return (obj.length === 0);
+		}
+		else if (this.isWeakSet(obj)) {
+			return (obj.length === 0);
 		}
 		else if (this.isObject(obj)) {
 			// because Object.keys(new Date()).length === 0;
@@ -203,6 +254,16 @@ module.exports = {
 	 */
 	'isEmptyString': function (string) {
 		return ( this.isString(string) && this.isEmpty(string) );
+	},
+
+	/**
+	 * isError
+	 * @param obj
+	 * @return {boolean}
+	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'error' otherwise false.
+	 */
+	'isError': function (obj) {
+		return (TYPE_ERROR === typeof obj || TYPE_ERROR_OBJECT === toString.call(obj));
 	},
 
 	/**
@@ -312,7 +373,8 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'function' otherwise false.
 	 */
 	'isFunction': function (obj) {
-		return ('function' === typeof obj);
+		return (TYPE_FUNCTION === typeof obj || TYPE_FUNCTION_OBJECT === toString.call(obj))
+			|| (TYPE_GENERATOR_FUNCTION === typeof obj || TYPE_GENERATOR_FUNCTION_OBJECT === toString.call(obj));
 	},
 
 	/**
@@ -342,7 +404,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'map' otherwise false.
 	 */
 	'isMap': function (obj) {
-		return (this.isObject(obj) && (obj instanceof Map));
+		return (TYPE_MAP === typeof obj || TYPE_MAP_OBJECT === toString.call(obj));
 	},
 
 	/**
@@ -395,7 +457,7 @@ module.exports = {
 	'isNumeric': function (number) {
 //		return ( (!isNaN(number) && (!isNaN(parseFloat(number))) && isFinite(number)) );
 //		return ( !isNaN(number) && 'number' === this.typeOf(number) );
-		return ('number' === typeof number || '[object Number]' === toString.call(number));
+		return (TYPE_NUMBER === typeof number || TYPE_NUMBER_OBJECT === toString.call(number));
 	},
 
 	/**
@@ -405,7 +467,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'object' otherwise false.
 	 */
 	'isObject': function (obj) {
-		return ('object' === typeof obj);
+		return (TYPE_OBJECT === typeof obj || TYPE_OBJECT_OBJECT === toString.call(obj));
 	},
 
 	/**
@@ -415,7 +477,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'set' otherwise false.
 	 */
 	'isRegExp': function (obj) {
-		return (this.isObject(obj) && (obj instanceof RegExp));
+		return (TYPE_REGEXP=== typeof obj || TYPE_REGEXP_OBJECT === toString.call(obj));
 	},
 
 	/**
@@ -425,7 +487,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'set' otherwise false.
 	 */
 	'isSet': function (obj) {
-		return (this.isObject(obj) && (obj instanceof Set));
+		return (TYPE_SET === typeof obj || TYPE_SET_OBJECT === toString.call(obj));
 	},
 
 	/**
@@ -435,7 +497,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'string' otherwise false.
 	 */
 	'isString': function (string) {
-		return ('string' === typeof string || '[object String]' === toString.call(string));
+		return (TYPE_STRING === typeof string || TYPE_STRING_OBJECT === toString.call(string));
 	},
 
 	/**
@@ -445,7 +507,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'symbol' otherwise false.
 	 */
 	'isSymbol': function (obj) {
-		return ('symbol' === typeof obj || '[object Symbol]' === toString.call(obj));
+		return (TYPE_SYMBOL === typeof obj || TYPE_SYMBOL_OBJECT === toString.call(obj));
 	},
 
 	/**
@@ -546,30 +608,6 @@ module.exports = {
 				bIs = (trimmedString === stringBooleanValues);
 			}
 		}
-		// if (this.isString(string)) {
-		// 	if (string.trim().length > 1) {
-		// 		if (this.isArray(config.trueValues.string)) {
-		// 			for (var stringBool of config.trueValues.string) {
-		//
-		// 				if ( (bIs = (stringBool === string.trim())) ) break;
-		// 			}
-		// 		}
-		// 		else {
-		// 			bIs = (config.trueValues.string === string.trim());
-		// 		}
-		// 	}
-		// 	else {
-		// 		if (this.isArray(config.trueValues.character)) {
-		// 			for (var characterBool of config.trueValues.character) {
-		//
-		// 				if ( (bIs = (characterBool === string.trim())) ) break;
-		// 			}
-		// 		}
-		// 		else {
-		// 			bIs = (config.trueValues.character === string.trim());
-		// 		}
-		// 	}
-		// }
 		return bIs;
 	},
 
@@ -580,7 +618,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'undefined' otherwise false.
 	 */
 	'isUndefined': function (obj) {
-		return ('undefined' === typeof obj);
+		return (TYPE_UNDEFINED === typeof obj);
 	},
 
 	/**
@@ -590,7 +628,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'unknown' otherwise false.
 	 */
 	'isUnknown': function (obj) {
-		return ('unknown' === this.typeOf(obj));
+		return (TYPE_UNKNOWN === this.typeOf(obj));
 	},
 
 	/**
@@ -600,7 +638,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'weakmap' otherwise false.
 	 */
 	'isWeakMap': function (obj) {
-		return (this.isObject(obj) && (obj instanceof WeakMap));
+		return (TYPE_WEAKMAP === typeof obj || TYPE_WEAKMAP_OBJECT === toString.call(obj));
 	},
 
 	/**
@@ -610,7 +648,7 @@ module.exports = {
 	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'weakset' otherwise false.
 	 */
 	'isWeakSet': function (obj) {
-		return (this.isObject(obj) && (obj instanceof WeakSet));
+		return (TYPE_WEAKSET === typeof obj || TYPE_WEAKSET_OBJECT === toString.call(obj));
 	},
 
 };

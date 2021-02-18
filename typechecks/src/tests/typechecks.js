@@ -2,9 +2,65 @@ const expect    = require("chai").expect;
 const assert    = require("chai").assert;
 const typecheck = require("../../app/index");
 
-describe("Type Checker", function() {
+/*
+  Test Variables
+ */
+const varEmptyArray = [];
+const varArray = [1, 2, 3];
+const varBigInt = 42n;
+const varBigIntObject = BigInt(42n);
+const varBooleanFalse = false;
+const varBooleanObjectFalse = Boolean(false);
+const varBooleanTrue = true;
+const varBooleanObjectTrue = Boolean(true);
+const varDate = new Date();
+const varError = new Error("ErrorMessage");
+const varFunction = () => {};
+const varGeneraorFunction = function* () {
+    yield 1;
+};
+const varMapEmpty = new Map();
+const varMap = new Map([
+    ['tomato', 10],
+    ['cucumber', 5],
+    ['onion', 3]
+]);
+const varNull = null;
+const varNumber = 42;
+const varNumberObject = new Number(42);
+const varObjectEmpty = {};
+const varObject = {
+    "key": ["val1", "val2", "val3"]
+};
+const varRegExp = /\d/;
+const varSetEmpty = new Set();
+const varSet = new Set([
+    "oranges",
+    "apples",
+    "bananas"
+]);
+const varStringEmpty = '';
+const varString = 'Hello World!';
+const varStringObject = String('Hello World!');
+const varSymbol = Symbol('foo');
+let varUndefined;
+const varWeakMapEmpty = new WeakMap();
+const varWeakMap = new WeakMap([
+    [new Object('tomato'), 10],
+    [new Object('cucumber'), 5],
+    [new Object('onion'), 3]
+]);
+const varWeakSetEmpty = new WeakSet();
+const varWeakSet = new WeakSet([
+    new Object("oranges"),
+    new Object("apples"),
+    new Object("bananas")
+]);
 
-    describe("isCaseSensitiveValuesCheck", function() {
+
+
+describe("Type Checker", function() {
+    describe("caseSensitiveValuesCheck", function() {
         it("config value lookup", function () {
             let isCaseSensitiveValuesCheck = typecheck.isCaseSensitiveValuesCheck();
             assert.isBoolean(isCaseSensitiveValuesCheck, 'isCaseSensitiveValuesCheck');
@@ -12,66 +68,128 @@ describe("Type Checker", function() {
     });
 
     describe("typeOf", function() {
-        it("checks primitive types", function () {
-            let typeBoolean = typecheck.typeOf(false);
-            expect(typeBoolean).to.equal('boolean');
+        describe("checks primitive types", function() {
+            it("boolean", function () {
+                expect(typecheck.typeOf(varBooleanFalse)).to.equal('boolean');
+                expect(typecheck.typeOf(varBooleanObjectFalse)).to.equal('boolean');
+                expect(typecheck.typeOf(varBooleanTrue)).to.equal('boolean');
+                expect(typecheck.typeOf(varBooleanObjectTrue)).to.equal('boolean');
+            });
 
-            let typeBigInt = typecheck.typeOf(42n);
-            expect(typeBigInt).to.equal('bigint');
+            it("bigint", function () {
+                expect(typecheck.typeOf(varBigInt)).to.equal('bigint');
+                expect(typecheck.typeOf(varBigIntObject)).to.equal('bigint');
+            });
 
-            let typeNumber = typecheck.typeOf(42);
-            expect(typeNumber).to.equal('number');
+            it("number", function () {
+                expect(typecheck.typeOf(varNumber)).to.equal('number');
+                expect(typecheck.typeOf(varNumberObject)).to.equal('number');
+            });
 
-            let typeString = typecheck.typeOf("Hello World!");
-            expect(typeString).to.equal('string');
+            it("string", function () {
+                expect(typecheck.typeOf(varStringEmpty)).to.equal('string');
+                expect(typecheck.typeOf(varString)).to.equal('string');
+                expect(typecheck.typeOf(varStringObject)).to.equal('string');
+            });
 
-            let typeSymbol = typecheck.typeOf(Symbol('foo'));
-            expect(typeSymbol).to.equal('symbol');
+            it("symbol", function () {
+                expect(typecheck.typeOf(varSymbol)).to.equal('symbol');
+            });
 
-            let typeNull = typecheck.typeOf(null);
-            expect(typeNull).to.equal('null');
+            it("null", function () {
+                expect(typecheck.typeOf(varNull)).to.equal('null');
+            });
 
-            let undef;
-            let typeUndefined = typecheck.typeOf(undef);
-            expect(typeUndefined).to.equal('undefined');
+            it("undefined", function () {
+                expect(typecheck.typeOf(varUndefined)).to.equal('undefined');
+            });
         });
 
-        it("checks object types/instances", function () {
-            let typeArray = typecheck.typeOf([]);
-            expect(typeArray).to.equal('array');
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.typeOf(varEmptyArray)).to.equal('array');
+                expect(typecheck.typeOf(varArray)).to.equal('array');
+            });
 
-            let typeDate = typecheck.typeOf(new Date());
-            expect(typeDate).to.equal('date');
+            it("Date", function () {
+                expect(typecheck.typeOf(varDate)).to.equal('date');
+            });
 
-            let typeMap = typecheck.typeOf(new Map());
-            expect(typeMap).to.equal('map');
+            it("Error", function () {
+                expect(typecheck.typeOf(varError)).to.equal('error');
+            });
 
-            let typeObject = typecheck.typeOf({});
-            expect(typeObject).to.equal('object');
+            it("Map", function () {
+                expect(typecheck.typeOf(varMapEmpty)).to.equal('map');
+                expect(typecheck.typeOf(varMap)).to.equal('map');
+            });
 
-            let typeRegEx = typecheck.typeOf(/\d/);
-            expect(typeRegEx).to.equal('regexp');
+            it("Object", function () {
+                expect(typecheck.typeOf(varObjectEmpty)).to.equal('object');
+                expect(typecheck.typeOf(varObject)).to.equal('object');
+            });
 
-            let typeSet = typecheck.typeOf(new Set());
-            expect(typeSet).to.equal('set');
+            it("RegExp", function () {
+                expect(typecheck.typeOf(varRegExp)).to.equal('regexp');
+            });
 
-            let typeWeakMap = typecheck.typeOf(new WeakMap());
-            expect(typeWeakMap).to.equal('weakmap');
+            it("Set", function () {
+                expect(typecheck.typeOf(varSetEmpty)).to.equal('set');
+                expect(typecheck.typeOf(varSet)).to.equal('set');
+            });
 
-            let typeWeakSet = typecheck.typeOf(new WeakSet());
-            expect(typeWeakSet).to.equal('weakset');
+            it("WeakMap", function () {
+                expect(typecheck.typeOf(varWeakMapEmpty)).to.equal('weakmap');
+                expect(typecheck.typeOf(varWeakMap)).to.equal('weakmap');
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.typeOf(varWeakSetEmpty)).to.equal('weakset');
+                expect(typecheck.typeOf(varWeakSet)).to.equal('weakset');
+            });
         });
 
-        it("checks object types", function () {
-            let typeFunction = typecheck.typeOf(() => {});
-            expect(typeFunction).to.equal('function');
-        });
-
-        it("checks null/empty values", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.typeOf(varFunction)).to.equal('function');
+//TODO                expect(typecheck.typeOf(varGeneraorFunction())).to.equal('function');
+            });
         });
     });
 
     describe("isArray", function() {
+        describe("checks primitive types", function() {
+            it("boolean", function () {
+            });
+
+            it("bigint", function () {
+            });
+
+            it("number", function () {
+            });
+
+            it("string", function () {
+            });
+
+            it("symbol", function () {
+            });
+
+            it("null", function () {
+            });
+
+            it("undefined", function () {
+            });
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsArray;
             bIsArray = typecheck.isArray([]);
@@ -126,6 +244,18 @@ describe("Type Checker", function() {
     });
 
     describe("isBoolean", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsBoolean;
             bIsBoolean = typecheck.isBoolean([]);
@@ -261,6 +391,18 @@ describe("Type Checker", function() {
     });
 
     describe("isBooleanValue", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsBooleanValue;
             bIsBooleanValue = typecheck.isBooleanValue([]);
@@ -396,6 +538,18 @@ describe("Type Checker", function() {
     });
 
     describe("isDate", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsDate;
             bIsDate = typecheck.isDate([]);
@@ -450,6 +604,18 @@ describe("Type Checker", function() {
     });
 
     describe("isEmpty", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsEmpty;
             bIsEmpty = typecheck.isEmpty([]);
@@ -504,6 +670,18 @@ describe("Type Checker", function() {
     });
 
     describe("isEmptyString", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsEmptyString;
             bIsEmptyString = typecheck.isEmptyString([]);
@@ -565,6 +743,18 @@ describe("Type Checker", function() {
     });
 
     describe("isFalse", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsFalse;
             bIsFalse = typecheck.isFalse([]);
@@ -700,6 +890,18 @@ describe("Type Checker", function() {
     });
 
     describe("isFalseBoolean", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsFalseBoolean;
             bIsFalseBoolean = typecheck.isFalseBoolean([]);
@@ -757,6 +959,18 @@ describe("Type Checker", function() {
     });
 
     describe("isFalseNumber", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsFalseNumber;
             bIsFalseNumber = typecheck.isFalseNumber([]);
@@ -820,6 +1034,18 @@ describe("Type Checker", function() {
     });
 
     describe("isFalseString", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsFalseString;
             bIsFalseString = typecheck.isFalseString([]);
@@ -949,6 +1175,18 @@ describe("Type Checker", function() {
     });
 
     describe("isFunction", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsFunction;
             bIsFunction = typecheck.isFunction([]);
@@ -1003,6 +1241,18 @@ describe("Type Checker", function() {
     });
 
     describe("isJSONString", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsJSONString;
             bIsJSONString = typecheck.isJSONString([]);
@@ -1066,6 +1316,18 @@ describe("Type Checker", function() {
     });
 
     describe("isNotEmpty", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsNotEmpty;
             bIsNotEmpty = typecheck.isNotEmpty([]);
@@ -1120,6 +1382,18 @@ describe("Type Checker", function() {
     });
 
     describe("isNotEmptyString", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsNotEmptyString;
             bIsNotEmptyString = typecheck.isNotEmptyString([]);
@@ -1192,6 +1466,18 @@ describe("Type Checker", function() {
     });
 
     describe("isNull", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsNull;
             bIsNull = typecheck.isNull([]);
@@ -1246,6 +1532,18 @@ describe("Type Checker", function() {
     });
 
     describe("isNumeric", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsNumeric;
             bIsNumeric = typecheck.isNumeric([]);
@@ -1300,6 +1598,18 @@ describe("Type Checker", function() {
     });
 
     describe("isObject", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsObject;
             bIsObject = typecheck.isObject([]);
@@ -1354,6 +1664,18 @@ describe("Type Checker", function() {
     });
 
     describe("isString", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsString;
             bIsString = typecheck.isString([]);
@@ -1417,6 +1739,18 @@ describe("Type Checker", function() {
     });
 
     describe("isSymbol", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsSymbol;
             bIsSymbol = typecheck.isSymbol([]);
@@ -1471,6 +1805,18 @@ describe("Type Checker", function() {
     });
 
     describe("isTrue", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsTrue;
             bIsTrue = typecheck.isTrue([]);
@@ -1606,6 +1952,18 @@ describe("Type Checker", function() {
     });
 
     describe("isTrueBoolean", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsTrueBoolean;
             bIsTrueBoolean = typecheck.isTrueBoolean([]);
@@ -1663,6 +2021,18 @@ describe("Type Checker", function() {
     });
 
     describe("isTrueNumber", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsTrueNumber;
             bIsTrueNumber = typecheck.isTrueNumber([]);
@@ -1726,6 +2096,18 @@ describe("Type Checker", function() {
     });
 
     describe("isTrueString", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsTrueString;
             bIsTrueString = typecheck.isTrueString([]);
@@ -1855,6 +2237,18 @@ describe("Type Checker", function() {
     });
 
     describe("isUndefined", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsUndefined;
             bIsUndefined = typecheck.isUndefined([]);
@@ -1909,6 +2303,18 @@ describe("Type Checker", function() {
     });
 
     describe("isUnknown", function() {
+        it("checks primitive types", function () {
+        });
+
+        it("checks object type/instances", function () {
+        });
+
+        it("checks additional types", function () {
+        });
+
+        it("TODO", function () {
+        });
+
         it("checks for array type", function () {
             let bIsUnknown;
             bIsUnknown = typecheck.isUnknown([]);
