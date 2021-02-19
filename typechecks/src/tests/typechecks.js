@@ -27,7 +27,7 @@ const varMap = new Map([
 ]);
 const varNull = null;
 const varNumber = 42;
-const varNumberObject = new Number(42);
+const varNumberObject = Number(42);
 const varObjectEmpty = {};
 const varObject = {
     "key": ["val1", "val2", "val3"]
@@ -69,16 +69,16 @@ describe("Type Checker", function() {
 
     describe("typeOf", function() {
         describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.typeOf(varBigInt)).to.equal('bigint');
+                expect(typecheck.typeOf(varBigIntObject)).to.equal('bigint');
+            });
+
             it("boolean", function () {
                 expect(typecheck.typeOf(varBooleanFalse)).to.equal('boolean');
                 expect(typecheck.typeOf(varBooleanObjectFalse)).to.equal('boolean');
                 expect(typecheck.typeOf(varBooleanTrue)).to.equal('boolean');
                 expect(typecheck.typeOf(varBooleanObjectTrue)).to.equal('boolean');
-            });
-
-            it("bigint", function () {
-                expect(typecheck.typeOf(varBigInt)).to.equal('bigint');
-                expect(typecheck.typeOf(varBigIntObject)).to.equal('bigint');
             });
 
             it("number", function () {
@@ -159,528 +159,626 @@ describe("Type Checker", function() {
 
     describe("isArray", function() {
         describe("checks primitive types", function() {
-            it("boolean", function () {
+            it("bigint", function () {
+                expect(typecheck.isArray(varBigInt)).is.false;
+                expect(typecheck.isArray(varBigIntObject)).is.false;
             });
 
-            it("bigint", function () {
+            it("boolean", function () {
+                expect(typecheck.isArray(varBooleanFalse)).is.false;
+                expect(typecheck.isArray(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isArray(varBooleanTrue)).is.false;
+                expect(typecheck.isArray(varBooleanObjectTrue)).is.false;
             });
 
             it("number", function () {
+                expect(typecheck.isArray(varNumber)).is.false;
+                expect(typecheck.isArray(varNumberObject)).is.false;
             });
 
             it("string", function () {
+                expect(typecheck.isArray(varStringEmpty)).is.false;
+                expect(typecheck.isArray(varString)).is.false;
+                expect(typecheck.isArray(varStringObject)).is.false;
             });
 
             it("symbol", function () {
+                expect(typecheck.isArray(varSymbol)).is.false;
             });
 
             it("null", function () {
+                expect(typecheck.isArray(varNull)).is.false;
             });
 
             it("undefined", function () {
+                expect(typecheck.isArray(varUndefined)).is.false;
             });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isArray(varEmptyArray)).is.true;
+                expect(typecheck.isArray(varArray)).is.true;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isArray(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isArray(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isArray(varMapEmpty)).is.false;
+                expect(typecheck.isArray(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isArray(varObjectEmpty)).is.false;
+                expect(typecheck.isArray(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isArray(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isArray(varSetEmpty)).is.false;
+                expect(typecheck.isArray(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isArray(varWeakMapEmpty)).is.false;
+                expect(typecheck.isArray(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isArray(varWeakSetEmpty)).is.false;
+                expect(typecheck.isArray(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsArray;
-            bIsArray = typecheck.isArray([]);
-            expect(bIsArray).is.true;
-
-            bIsArray = typecheck.isArray(42n);
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray(false);
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray(new Date());
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray(() => {});
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray(new Map());
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray(null);
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray(42);
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray({});
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray(/\d/);
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray(new Set());
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray("Hello World!");
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray(Symbol('foo'));
-            expect(bIsArray).is.false;
-
-            let undef;
-            bIsArray = typecheck.isArray(undef);
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray(new WeakMap());
-            expect(bIsArray).is.false;
-
-            bIsArray = typecheck.isArray(new WeakSet());
-            expect(bIsArray).is.false;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isArray(varFunction)).is.false;
+//TODO                expect(typecheck.isArray(varGeneraorFunction())).is.false;
+            });
         });
     });
 
     describe("isBoolean", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isBoolean(varBigInt)).is.false;
+                expect(typecheck.isBoolean(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isBoolean(varBooleanFalse)).is.true;
+                expect(typecheck.isBoolean(varBooleanObjectFalse)).is.true;
+                expect(typecheck.isBoolean(varBooleanTrue)).is.true;
+                expect(typecheck.isBoolean(varBooleanObjectTrue)).is.true;
+            });
+
+            it("number", function () {
+                expect(typecheck.isBoolean(varNumber)).is.false;
+                expect(typecheck.isBoolean(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isBoolean(varStringEmpty)).is.false;
+                expect(typecheck.isBoolean(varString)).is.false;
+                expect(typecheck.isBoolean(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isBoolean(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isBoolean(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isBoolean(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isBoolean(varEmptyArray)).is.false;
+                expect(typecheck.isBoolean(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isBoolean(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isBoolean(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isBoolean(varMapEmpty)).is.false;
+                expect(typecheck.isBoolean(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isBoolean(varObjectEmpty)).is.false;
+                expect(typecheck.isBoolean(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isBoolean(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isBoolean(varSetEmpty)).is.false;
+                expect(typecheck.isBoolean(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isBoolean(varWeakMapEmpty)).is.false;
+                expect(typecheck.isBoolean(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isBoolean(varWeakSetEmpty)).is.false;
+                expect(typecheck.isBoolean(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isBoolean(varFunction)).is.false;
+//TODO                expect(typecheck.isBoolean(varGeneraorFunction())).is.false;
+            });
         });
 
-        it("TODO", function () {
+        describe("check false value objects", function() {
+            it("characters", function () {
+                for ( let falseChar of typecheck.getConfig().falseValues.character ) {
+                    expect(typecheck.isBoolean(falseChar)).is.false;
+                }
+            });
+
+            it("numbers", function () {
+                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                    expect(typecheck.isBoolean(falseNumber)).is.false;
+                }
+            });
+
+            it("string", function () {
+                for ( let falseString of typecheck.getConfig().falseValues.string ) {
+                    expect(typecheck.isBoolean(falseString)).is.false;
+                }
+            });
         });
 
-        it("checks for array type", function () {
-            let bIsBoolean;
-            bIsBoolean = typecheck.isBoolean([]);
-            expect(bIsBoolean).is.false;
+        describe("check true value objects", function() {
+            it("characters", function () {
+                for ( let trueChar of typecheck.getConfig().trueValues.character ) {
+                    expect(typecheck.isBoolean(trueChar)).is.false;
+                }
+            });
 
-            bIsBoolean = typecheck.isBoolean(42n);
-            expect(bIsBoolean).is.false;
+            it("numbers", function () {
+                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
+                    expect(typecheck.isBoolean(trueNumber)).is.false;
+                }
+            });
 
-            bIsBoolean = typecheck.isBoolean(false);
-            expect(bIsBoolean).is.true;
-
-            bIsBoolean = typecheck.isBoolean(new Date());
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean(() => {});
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean(new Map());
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean(null);
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean(42);
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean({});
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean(/\d/);
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean(new Set());
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("Hello World!");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean(Symbol('foo'));
-            expect(bIsBoolean).is.false;
-
-            let undef;
-            bIsBoolean = typecheck.isBoolean(undef);
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean(new WeakMap());
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean(new WeakSet());
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean('n');
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean('N');
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean('0');
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean(0);
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("false");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("failure");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("err");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("error");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("fault");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("no");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("wrong");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("off");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("FALSE");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("False");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("FaLsE");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("j");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("J");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("y");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("Y");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("1");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean(1);
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("true");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("success");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("ok");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("yes");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("right");
-            expect(bIsBoolean).is.false;
-
-            bIsBoolean = typecheck.isBoolean("on");
-            expect(bIsBoolean).is.false;
+            it("string", function () {
+                for ( let trueString of typecheck.getConfig().trueValues.string ) {
+                    expect(typecheck.isBoolean(trueString)).is.false;
+                }
+            });
         });
     });
 
     describe("isBooleanValue", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isBooleanValue(varBigInt)).is.false;
+                expect(typecheck.isBooleanValue(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isBooleanValue(varBooleanFalse)).is.true;
+                expect(typecheck.isBooleanValue(varBooleanObjectFalse)).is.true;
+                expect(typecheck.isBooleanValue(varBooleanTrue)).is.true;
+                expect(typecheck.isBooleanValue(varBooleanObjectTrue)).is.true;
+            });
+
+            it("number", function () {
+                expect(typecheck.isBooleanValue(varNumber)).is.false;
+                expect(typecheck.isBooleanValue(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isBooleanValue(varStringEmpty)).is.false;
+                expect(typecheck.isBooleanValue(varString)).is.false;
+                expect(typecheck.isBooleanValue(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isBooleanValue(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isBooleanValue(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isBooleanValue(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isBooleanValue(varEmptyArray)).is.false;
+                expect(typecheck.isBooleanValue(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isBooleanValue(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isBooleanValue(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isBooleanValue(varMapEmpty)).is.false;
+                expect(typecheck.isBooleanValue(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isBooleanValue(varObjectEmpty)).is.false;
+                expect(typecheck.isBooleanValue(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isBooleanValue(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isBooleanValue(varSetEmpty)).is.false;
+                expect(typecheck.isBooleanValue(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isBooleanValue(varWeakMapEmpty)).is.false;
+                expect(typecheck.isBooleanValue(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isBooleanValue(varWeakSetEmpty)).is.false;
+                expect(typecheck.isBooleanValue(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isBooleanValue(varFunction)).is.false;
+//TODO                expect(typecheck.isBooleanValue(varGeneraorFunction())).is.false;
+            });
         });
 
-        it("TODO", function () {
+        describe("check false value objects", function() {
+            it("characters", function () {
+                for ( let falseChar of typecheck.getConfig().falseValues.character ) {
+                    expect(typecheck.isBooleanValue(falseChar)).is.true;
+                }
+            });
+
+            it("numbers", function () {
+                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                    expect(typecheck.isBooleanValue(falseNumber)).is.true;
+                }
+            });
+
+            it("string", function () {
+                for ( let falseString of typecheck.getConfig().falseValues.string ) {
+                    expect(typecheck.isBooleanValue(falseString)).is.true;
+                }
+            });
         });
 
-        it("checks for array type", function () {
-            let bIsBooleanValue;
-            bIsBooleanValue = typecheck.isBooleanValue([]);
-            expect(bIsBooleanValue).is.false;
+        describe("check true value objects", function() {
+            it("characters", function () {
+                for ( let trueChar of typecheck.getConfig().trueValues.character ) {
+                    expect(typecheck.isBooleanValue(trueChar)).is.true;
+                }
+            });
 
-            bIsBooleanValue = typecheck.isBooleanValue(42n);
-            expect(bIsBooleanValue).is.false;
+            it("numbers", function () {
+                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
+                    expect(typecheck.isBooleanValue(trueNumber)).is.true;
+                }
+            });
 
-            bIsBooleanValue = typecheck.isBooleanValue(false);
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue(new Date());
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue(() => {});
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue(new Map());
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue(null);
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue(42);
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue({});
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue(/\d/);
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue(new Set());
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue("Hello World!");
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue(Symbol('foo'));
-            expect(bIsBooleanValue).is.false;
-
-            let undef;
-            bIsBooleanValue = typecheck.isBooleanValue(undef);
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue(new WeakMap());
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue(new WeakSet());
-            expect(bIsBooleanValue).is.false;
-
-            bIsBooleanValue = typecheck.isBooleanValue('n');
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue('N');
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue('0');
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue(0);
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("false");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("failure");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("err");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("error");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("fault");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("no");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("wrong");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("off");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("FALSE");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("False");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("FaLsE");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("j");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("J");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("y");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("Y");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("1");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue(1);
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("true");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("success");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("ok");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("yes");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("right");
-            expect(bIsBooleanValue).is.true;
-
-            bIsBooleanValue = typecheck.isBooleanValue("on");
-            expect(bIsBooleanValue).is.true;
+            it("string", function () {
+                for ( let trueString of typecheck.getConfig().trueValues.string ) {
+                    expect(typecheck.isBooleanValue(trueString)).is.true;
+                }
+            });
         });
     });
 
     describe("isDate", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isDate(varBigInt)).is.false;
+                expect(typecheck.isDate(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isDate(varBooleanFalse)).is.false;
+                expect(typecheck.isDate(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isDate(varBooleanTrue)).is.false;
+                expect(typecheck.isDate(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isDate(varNumber)).is.false;
+                expect(typecheck.isDate(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isDate(varStringEmpty)).is.false;
+                expect(typecheck.isDate(varString)).is.false;
+                expect(typecheck.isDate(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isDate(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isDate(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isDate(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isDate(varEmptyArray)).is.false;
+                expect(typecheck.isDate(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isDate(varDate)).is.true;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isDate(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isDate(varMapEmpty)).is.false;
+                expect(typecheck.isDate(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isDate(varObjectEmpty)).is.false;
+                expect(typecheck.isDate(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isDate(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isDate(varSetEmpty)).is.false;
+                expect(typecheck.isDate(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isDate(varWeakMapEmpty)).is.false;
+                expect(typecheck.isDate(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isDate(varWeakSetEmpty)).is.false;
+                expect(typecheck.isDate(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsDate;
-            bIsDate = typecheck.isDate([]);
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate(42n);
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate(false);
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate(new Date());
-            expect(bIsDate).is.true;
-
-            bIsDate = typecheck.isDate(() => {});
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate(new Map());
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate(null);
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate(42);
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate({});
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate(/\d/);
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate(new Set());
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate("Hello World!");
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate(Symbol('foo'));
-            expect(bIsDate).is.false;
-
-            let undef;
-            bIsDate = typecheck.isDate(undef);
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate(new WeakMap());
-            expect(bIsDate).is.false;
-
-            bIsDate = typecheck.isDate(new WeakSet());
-            expect(bIsDate).is.false;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isDate(varFunction)).is.false;
+//TODO                expect(typecheck.isDate(varGeneraorFunction())).is.false;
+            });
         });
     });
 
     describe("isEmpty", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isEmpty(varBigInt)).is.false;
+                expect(typecheck.isEmpty(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isEmpty(varBooleanFalse)).is.false;
+                expect(typecheck.isEmpty(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isEmpty(varBooleanTrue)).is.false;
+                expect(typecheck.isEmpty(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isEmpty(varNumber)).is.false;
+                expect(typecheck.isEmpty(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isEmpty(varStringEmpty)).is.true;
+                expect(typecheck.isEmpty(varString)).is.false;
+                expect(typecheck.isEmpty(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isEmpty(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isEmpty(varNull)).is.true;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isEmpty(varUndefined)).is.true;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isEmpty(varEmptyArray)).is.true;
+                expect(typecheck.isEmpty(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isEmpty(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isEmpty(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isEmpty(varMapEmpty)).is.false;
+                expect(typecheck.isEmpty(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isEmpty(varObjectEmpty)).is.true;
+                expect(typecheck.isEmpty(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isEmpty(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isEmpty(varSetEmpty)).is.false;
+                expect(typecheck.isEmpty(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isEmpty(varWeakMapEmpty)).is.false;
+                expect(typecheck.isEmpty(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isEmpty(varWeakSetEmpty)).is.false;
+                expect(typecheck.isEmpty(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsEmpty;
-            bIsEmpty = typecheck.isEmpty([]);
-            expect(bIsEmpty).is.true;
-
-            bIsEmpty = typecheck.isEmpty(42n);
-            expect(bIsEmpty).is.false;
-
-            bIsEmpty = typecheck.isEmpty(false);
-            expect(bIsEmpty).is.false;
-
-            bIsEmpty = typecheck.isEmpty(new Date());
-            expect(bIsEmpty).is.false;
-
-            bIsEmpty = typecheck.isEmpty(() => {});
-            expect(bIsEmpty).is.false;
-
-            bIsEmpty = typecheck.isEmpty(new Map());
-            expect(bIsEmpty).is.false;
-
-            bIsEmpty = typecheck.isEmpty(null);
-            expect(bIsEmpty).is.true;
-
-            bIsEmpty = typecheck.isEmpty(42);
-            expect(bIsEmpty).is.false;
-
-            bIsEmpty = typecheck.isEmpty({});
-            expect(bIsEmpty).is.true;
-
-            bIsEmpty = typecheck.isEmpty(/\d/);
-            expect(bIsEmpty).is.false;
-
-            bIsEmpty = typecheck.isEmpty(new Set());
-            expect(bIsEmpty).is.false;
-
-            bIsEmpty = typecheck.isEmpty("Hello World!");
-            expect(bIsEmpty).is.false;
-
-            bIsEmpty = typecheck.isEmpty(Symbol('foo'));
-            expect(bIsEmpty).is.false;
-
-            let undef;
-            bIsEmpty = typecheck.isEmpty(undef);
-            expect(bIsEmpty).is.true;
-
-            bIsEmpty = typecheck.isEmpty(new WeakMap());
-            expect(bIsEmpty).is.false;
-
-            bIsEmpty = typecheck.isEmpty(new WeakSet());
-            expect(bIsEmpty).is.false;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isEmpty(varFunction)).is.false;
+//TODO                expect(typecheck.isEmpty(varGeneraorFunction())).is.false;
+            });
         });
     });
 
     describe("isEmptyString", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isEmptyString(varBigInt)).is.false;
+                expect(typecheck.isEmptyString(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isEmptyString(varBooleanFalse)).is.false;
+                expect(typecheck.isEmptyString(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isEmptyString(varBooleanTrue)).is.false;
+                expect(typecheck.isEmptyString(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isEmptyString(varNumber)).is.false;
+                expect(typecheck.isEmptyString(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isEmptyString(varStringEmpty)).is.true;
+                expect(typecheck.isEmptyString(varString)).is.false;
+                expect(typecheck.isEmptyString(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isEmptyString(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isEmptyString(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isEmptyString(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isEmptyString(varEmptyArray)).is.false;
+                expect(typecheck.isEmptyString(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isEmptyString(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isEmptyString(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isEmptyString(varMapEmpty)).is.false;
+                expect(typecheck.isEmptyString(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isEmptyString(varObjectEmpty)).is.false;
+                expect(typecheck.isEmptyString(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isEmptyString(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isEmptyString(varSetEmpty)).is.false;
+                expect(typecheck.isEmptyString(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isEmptyString(varWeakMapEmpty)).is.false;
+                expect(typecheck.isEmptyString(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isEmptyString(varWeakSetEmpty)).is.false;
+                expect(typecheck.isEmptyString(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isEmptyString(varFunction)).is.false;
+//TODO                expect(typecheck.isEmptyString(varGeneraorFunction())).is.false;
+            });
         });
 
-        it("TODO", function () {
-        });
+
+
+
 
         it("checks for array type", function () {
             let bIsEmptyString;
@@ -743,1628 +841,2036 @@ describe("Type Checker", function() {
     });
 
     describe("isFalse", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isFalse(varBigInt)).is.false;
+                expect(typecheck.isFalse(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isFalse(varBooleanFalse)).is.true;
+                expect(typecheck.isFalse(varBooleanObjectFalse)).is.true;
+                expect(typecheck.isFalse(varBooleanTrue)).is.false;
+                expect(typecheck.isFalse(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isFalse(varNumber)).is.false;
+                expect(typecheck.isFalse(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isFalse(varStringEmpty)).is.false;
+                expect(typecheck.isFalse(varString)).is.false;
+                expect(typecheck.isFalse(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isFalse(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isFalse(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isFalse(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isFalse(varEmptyArray)).is.false;
+                expect(typecheck.isFalse(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isFalse(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isFalse(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isFalse(varMapEmpty)).is.false;
+                expect(typecheck.isFalse(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isFalse(varObjectEmpty)).is.false;
+                expect(typecheck.isFalse(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isFalse(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isFalse(varSetEmpty)).is.false;
+                expect(typecheck.isFalse(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isFalse(varWeakMapEmpty)).is.false;
+                expect(typecheck.isFalse(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isFalse(varWeakSetEmpty)).is.false;
+                expect(typecheck.isFalse(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isFalse(varFunction)).is.false;
+//TODO                expect(typecheck.isFalse(varGeneraorFunction())).is.false;
+            });
         });
 
-        it("TODO", function () {
+        describe("check false value objects", function() {
+            it("characters", function () {
+                for ( let falseChar of typecheck.getConfig().falseValues.character ) {
+                    expect(typecheck.isFalse(falseChar)).is.true;
+                }
+            });
+
+            it("numbers", function () {
+                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                    expect(typecheck.isFalse(falseNumber)).is.true;
+                }
+            });
+
+            it("string", function () {
+                for ( let falseString of typecheck.getConfig().falseValues.string ) {
+                    expect(typecheck.isFalse(falseString)).is.true;
+                }
+            });
         });
 
-        it("checks for array type", function () {
-            let bIsFalse;
-            bIsFalse = typecheck.isFalse([]);
-            expect(bIsFalse).is.false;
+        describe("check true value objects", function() {
+            it("characters", function () {
+                for ( let trueChar of typecheck.getConfig().trueValues.character ) {
+                    expect(typecheck.isFalse(trueChar)).is.false;
+                }
+            });
 
-            bIsFalse = typecheck.isFalse(42n);
-            expect(bIsFalse).is.false;
+            it("numbers", function () {
+                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
+                    expect(typecheck.isFalse(trueNumber)).is.false;
+                }
+            });
 
-            bIsFalse = typecheck.isFalse(false);
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse(new Date());
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse(() => {});
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse(new Map());
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse(null);
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse(42);
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse({});
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse(/\d/);
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse(new Set());
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse("Hello World!");
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse(Symbol('foo'));
-            expect(bIsFalse).is.false;
-
-            let undef;
-            bIsFalse = typecheck.isFalse(undef);
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse(new WeakMap());
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse(new WeakSet());
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse('n');
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse('N');
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse('0');
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse(0);
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("false");
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("failure");
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("err");
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("error");
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("fault");
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("no");
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("wrong");
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("off");
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("FALSE");
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("False");
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("FaLsE");
-            expect(bIsFalse).is.true;
-
-            bIsFalse = typecheck.isFalse("j");
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse("J");
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse("y");
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse("Y");
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse("1");
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse(1);
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse("true");
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse("success");
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse("ok");
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse("yes");
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse("right");
-            expect(bIsFalse).is.false;
-
-            bIsFalse = typecheck.isFalse("on");
-            expect(bIsFalse).is.false;
+            it("string", function () {
+                for ( let trueString of typecheck.getConfig().trueValues.string ) {
+                    expect(typecheck.isFalse(trueString)).is.false;
+                }
+            });
         });
     });
 
     describe("isFalseBoolean", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isFalseBoolean(varBigInt)).is.false;
+                expect(typecheck.isFalseBoolean(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isFalseBoolean(varBooleanFalse)).is.true;
+                expect(typecheck.isFalseBoolean(varBooleanObjectFalse)).is.true;
+                expect(typecheck.isFalseBoolean(varBooleanTrue)).is.false;
+                expect(typecheck.isFalseBoolean(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isFalseBoolean(varNumber)).is.false;
+                expect(typecheck.isFalseBoolean(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isFalseBoolean(varStringEmpty)).is.false;
+                expect(typecheck.isFalseBoolean(varString)).is.false;
+                expect(typecheck.isFalseBoolean(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isFalseBoolean(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isFalseBoolean(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isFalseBoolean(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isFalseBoolean(varEmptyArray)).is.false;
+                expect(typecheck.isFalseBoolean(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isFalseBoolean(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isFalseBoolean(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isFalseBoolean(varMapEmpty)).is.false;
+                expect(typecheck.isFalseBoolean(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isFalseBoolean(varObjectEmpty)).is.false;
+                expect(typecheck.isFalseBoolean(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isFalseBoolean(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isFalseBoolean(varSetEmpty)).is.false;
+                expect(typecheck.isFalseBoolean(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isFalseBoolean(varWeakMapEmpty)).is.false;
+                expect(typecheck.isFalseBoolean(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isFalseBoolean(varWeakSetEmpty)).is.false;
+                expect(typecheck.isFalseBoolean(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isFalseBoolean(varFunction)).is.false;
+//TODO                expect(typecheck.isFalseBoolean(varGeneraorFunction())).is.false;
+            });
         });
 
-        it("TODO", function () {
+        describe("check false value objects", function() {
+            it("characters", function () {
+                for ( let falseChar of typecheck.getConfig().falseValues.character ) {
+                    expect(typecheck.isFalseBoolean(falseChar)).is.false;
+                }
+            });
+
+            it("numbers", function () {
+                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                    expect(typecheck.isFalseBoolean(falseNumber)).is.false;
+                }
+            });
+
+            it("string", function () {
+                for ( let falseString of typecheck.getConfig().falseValues.string ) {
+                    expect(typecheck.isFalseBoolean(falseString)).is.false;
+                }
+            });
         });
 
-        it("checks for array type", function () {
-            let bIsFalseBoolean;
-            bIsFalseBoolean = typecheck.isFalseBoolean([]);
-            expect(bIsFalseBoolean).is.false;
+        describe("check true value objects", function() {
+            it("characters", function () {
+                for ( let trueChar of typecheck.getConfig().trueValues.character ) {
+                    expect(typecheck.isFalseBoolean(trueChar)).is.false;
+                }
+            });
 
-            bIsFalseBoolean = typecheck.isFalseBoolean(42n);
-            expect(bIsFalseBoolean).is.false;
+            it("numbers", function () {
+                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
+                    expect(typecheck.isFalseBoolean(trueNumber)).is.false;
+                }
+            });
 
-            bIsFalseBoolean = typecheck.isFalseBoolean(false);
-            expect(bIsFalseBoolean).is.true;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean(new Date());
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean(() => {});
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean(new Map());
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean(null);
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean(42);
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean({});
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean(/\d/);
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean(new Set());
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean("Hello World!");
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean(Symbol('foo'));
-            expect(bIsFalseBoolean).is.false;
-
-            let undef;
-            bIsFalseBoolean = typecheck.isFalseBoolean(undef);
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean(new WeakMap());
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean(new WeakSet());
-            expect(bIsFalseBoolean).is.false;
-
-            bIsFalseBoolean = typecheck.isFalseBoolean(true);
-            expect(bIsFalseBoolean).is.false;
+            it("string", function () {
+                for ( let trueString of typecheck.getConfig().trueValues.string ) {
+                    expect(typecheck.isFalseBoolean(trueString)).is.false;
+                }
+            });
         });
     });
 
     describe("isFalseNumber", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isFalseNumber(varBigInt)).is.false;
+                expect(typecheck.isFalseNumber(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isFalseNumber(varBooleanFalse)).is.false;
+                expect(typecheck.isFalseNumber(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isFalseNumber(varBooleanTrue)).is.false;
+                expect(typecheck.isFalseNumber(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isFalseNumber(varNumber)).is.false;
+                expect(typecheck.isFalseNumber(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isFalseNumber(varStringEmpty)).is.false;
+                expect(typecheck.isFalseNumber(varString)).is.false;
+                expect(typecheck.isFalseNumber(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isFalseNumber(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isFalseNumber(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isFalseNumber(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isFalseNumber(varEmptyArray)).is.false;
+                expect(typecheck.isFalseNumber(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isFalseNumber(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isFalseNumber(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isFalseNumber(varMapEmpty)).is.false;
+                expect(typecheck.isFalseNumber(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isFalseNumber(varObjectEmpty)).is.false;
+                expect(typecheck.isFalseNumber(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isFalseNumber(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isFalseNumber(varSetEmpty)).is.false;
+                expect(typecheck.isFalseNumber(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isFalseNumber(varWeakMapEmpty)).is.false;
+                expect(typecheck.isFalseNumber(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isFalseNumber(varWeakSetEmpty)).is.false;
+                expect(typecheck.isFalseNumber(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isFalseNumber(varFunction)).is.false;
+//TODO                expect(typecheck.isFalseNumber(varGeneraorFunction())).is.false;
+            });
         });
 
-        it("TODO", function () {
+        describe("check false value objects", function() {
+            it("characters", function () {
+                for ( let falseChar of typecheck.getConfig().falseValues.character ) {
+                    expect(typecheck.isFalseNumber(falseChar)).is.false;
+                }
+            });
+
+            it("numbers", function () {
+                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                    expect(typecheck.isFalseNumber(falseNumber)).is.true;
+                }
+            });
+
+            it("string", function () {
+                for ( let falseString of typecheck.getConfig().falseValues.string ) {
+                    expect(typecheck.isFalseNumber(falseString)).is.false;
+                }
+            });
         });
 
-        it("checks for array type", function () {
-            let bIsFalseNumber;
-            bIsFalseNumber = typecheck.isFalseNumber([]);
-            expect(bIsFalseNumber).is.false;
+        describe("check true value objects", function() {
+            it("characters", function () {
+                for ( let trueChar of typecheck.getConfig().trueValues.character ) {
+                    expect(typecheck.isFalseNumber(trueChar)).is.false;
+                }
+            });
 
-            bIsFalseNumber = typecheck.isFalseNumber(42n);
-            expect(bIsFalseNumber).is.false;
+            it("numbers", function () {
+                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
+                    expect(typecheck.isFalseNumber(trueNumber)).is.false;
+                }
+            });
 
-            bIsFalseNumber = typecheck.isFalseNumber(false);
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(new Date());
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(() => {});
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(new Map());
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(null);
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(42);
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber({});
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(/\d/);
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(new Set());
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber("Hello World!");
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(Symbol('foo'));
-            expect(bIsFalseNumber).is.false;
-
-            let undef;
-            bIsFalseNumber = typecheck.isFalseNumber(undef);
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(new WeakMap());
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(new WeakSet());
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(0);
-            expect(bIsFalseNumber).is.true;
-
-            bIsFalseNumber = typecheck.isFalseNumber(1);
-            expect(bIsFalseNumber).is.false;
-
-            bIsFalseNumber = typecheck.isFalseNumber(2);
-            expect(bIsFalseNumber).is.false;
+            it("string", function () {
+                for ( let trueString of typecheck.getConfig().trueValues.string ) {
+                    expect(typecheck.isFalseNumber(trueString)).is.false;
+                }
+            });
         });
     });
 
     describe("isFalseString", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isFalseString(varBigInt)).is.false;
+                expect(typecheck.isFalseString(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isFalseString(varBooleanFalse)).is.false;
+                expect(typecheck.isFalseString(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isFalseString(varBooleanTrue)).is.false;
+                expect(typecheck.isFalseString(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isFalseString(varNumber)).is.false;
+                expect(typecheck.isFalseString(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isFalseString(varStringEmpty)).is.false;
+                expect(typecheck.isFalseString(varString)).is.false;
+                expect(typecheck.isFalseString(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isFalseString(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isFalseString(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isFalseString(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isFalseString(varEmptyArray)).is.false;
+                expect(typecheck.isFalseString(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isFalseString(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isFalseString(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isFalseString(varMapEmpty)).is.false;
+                expect(typecheck.isFalseString(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isFalseString(varObjectEmpty)).is.false;
+                expect(typecheck.isFalseString(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isFalseString(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isFalseString(varSetEmpty)).is.false;
+                expect(typecheck.isFalseString(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isFalseString(varWeakMapEmpty)).is.false;
+                expect(typecheck.isFalseString(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isFalseString(varWeakSetEmpty)).is.false;
+                expect(typecheck.isFalseString(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isFalseString(varFunction)).is.false;
+//TODO                expect(typecheck.isFalseString(varGeneraorFunction())).is.false;
+            });
         });
 
-        it("TODO", function () {
+        describe("check false value objects", function() {
+            it("characters", function () {
+                for ( let falseChar of typecheck.getConfig().falseValues.character ) {
+                    expect(typecheck.isFalseString(falseChar)).is.true;
+                }
+            });
+
+            it("numbers", function () {
+                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                    expect(typecheck.isFalseString(falseNumber)).is.false;
+                }
+            });
+
+            it("string", function () {
+                for ( let falseString of typecheck.getConfig().falseValues.string ) {
+                    expect(typecheck.isFalseString(falseString)).is.true;
+                }
+            });
         });
 
-        it("checks for array type", function () {
-            let bIsFalseString;
-            bIsFalseString = typecheck.isFalseString([]);
-            expect(bIsFalseString).is.false;
+        describe("check true value objects", function() {
+            it("characters", function () {
+                for ( let trueChar of typecheck.getConfig().trueValues.character ) {
+                    expect(typecheck.isFalseString(trueChar)).is.false;
+                }
+            });
 
-            bIsFalseString = typecheck.isFalseString(42n);
-            expect(bIsFalseString).is.false;
+            it("numbers", function () {
+                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
+                    expect(typecheck.isFalseString(trueNumber)).is.false;
+                }
+            });
 
-            bIsFalseString = typecheck.isFalseString(false);
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString(new Date());
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString(() => {});
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString(new Map());
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString(null);
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString(42);
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString({});
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString(/\d/);
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString(new Set());
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString("Hello World!");
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString(Symbol('foo'));
-            expect(bIsFalseString).is.false;
-
-            let undef;
-            bIsFalseString = typecheck.isFalseString(undef);
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString(new WeakMap());
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString(new WeakSet());
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString('n');
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString('N');
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString('0');
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("false");
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("failure");
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("err");
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("error");
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("fault");
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("no");
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("wrong");
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("off");
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("FALSE");
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("False");
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("FaLsE");
-            expect(bIsFalseString).is.true;
-
-            bIsFalseString = typecheck.isFalseString("j");
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString("J");
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString("y");
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString("Y");
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString("1");
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString("true");
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString("success");
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString("ok");
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString("yes");
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString("right");
-            expect(bIsFalseString).is.false;
-
-            bIsFalseString = typecheck.isFalseString("on");
-            expect(bIsFalseString).is.false;
+            it("string", function () {
+                for ( let trueString of typecheck.getConfig().trueValues.string ) {
+                    expect(typecheck.isFalseString(trueString)).is.false;
+                }
+            });
         });
     });
 
     describe("isFunction", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isFunction(varBigInt)).is.false;
+                expect(typecheck.isFunction(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isFunction(varBooleanFalse)).is.false;
+                expect(typecheck.isFunction(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isFunction(varBooleanTrue)).is.false;
+                expect(typecheck.isFunction(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isFunction(varNumber)).is.false;
+                expect(typecheck.isFunction(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isFunction(varStringEmpty)).is.false;
+                expect(typecheck.isFunction(varString)).is.false;
+                expect(typecheck.isFunction(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isFunction(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isFunction(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isFunction(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isFunction(varEmptyArray)).is.false;
+                expect(typecheck.isFunction(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isFunction(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isFunction(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isFunction(varMapEmpty)).is.false;
+                expect(typecheck.isFunction(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isFunction(varObjectEmpty)).is.false;
+                expect(typecheck.isFunction(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isFunction(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isFunction(varSetEmpty)).is.false;
+                expect(typecheck.isFunction(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isFunction(varWeakMapEmpty)).is.false;
+                expect(typecheck.isFunction(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isFunction(varWeakSetEmpty)).is.false;
+                expect(typecheck.isFunction(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsFunction;
-            bIsFunction = typecheck.isFunction([]);
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction(42n);
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction(false);
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction(new Date());
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction(() => {});
-            expect(bIsFunction).is.true;
-
-            bIsFunction = typecheck.isFunction(new Map());
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction(null);
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction(42);
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction({});
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction(/\d/);
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction(new Set());
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction("Hello World!");
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction(Symbol('foo'));
-            expect(bIsFunction).is.false;
-
-            let undef;
-            bIsFunction = typecheck.isFunction(undef);
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction(new WeakMap());
-            expect(bIsFunction).is.false;
-
-            bIsFunction = typecheck.isFunction(new WeakSet());
-            expect(bIsFunction).is.false;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isFunction(varFunction)).is.true;
+//TODO                expect(typecheck.isFunction(varGeneraorFunction())).is.true;
+            });
         });
     });
 
     describe("isJSONString", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isJSONString(varBigInt)).is.false;
+                expect(typecheck.isJSONString(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isJSONString(varBooleanFalse)).is.false;
+                expect(typecheck.isJSONString(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isJSONString(varBooleanTrue)).is.false;
+                expect(typecheck.isJSONString(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isJSONString(varNumber)).is.false;
+                expect(typecheck.isJSONString(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isJSONString(varStringEmpty)).is.false;
+                expect(typecheck.isJSONString(varString)).is.false;
+                expect(typecheck.isJSONString(varStringObject)).is.false;
+//TODO Variablen definieren!
+                expect(typecheck.isJSONString('{}')).is.true;
+                expect(typecheck.isJSONString('{"key": "value"}')).is.true;
+                expect(typecheck.isJSONString('["val1", "val2", "val3"]')).is.true;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isJSONString(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isJSONString(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isJSONString(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isJSONString(varEmptyArray)).is.false;
+                expect(typecheck.isJSONString(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isJSONString(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isJSONString(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isJSONString(varMapEmpty)).is.false;
+                expect(typecheck.isJSONString(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isJSONString(varObjectEmpty)).is.false;
+                expect(typecheck.isJSONString(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isJSONString(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isJSONString(varSetEmpty)).is.false;
+                expect(typecheck.isJSONString(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isJSONString(varWeakMapEmpty)).is.false;
+                expect(typecheck.isJSONString(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isJSONString(varWeakSetEmpty)).is.false;
+                expect(typecheck.isJSONString(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsJSONString;
-            bIsJSONString = typecheck.isJSONString([]);
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(42n);
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(false);
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(new Date());
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(() => {});
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(new Map());
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(null);
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(42);
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString({});
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(/\d/);
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(new Set());
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString("Hello World!");
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(Symbol('foo'));
-            expect(bIsJSONString).is.false;
-
-            let undef;
-            bIsJSONString = typecheck.isJSONString(undef);
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(new WeakMap());
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString(new WeakSet());
-            expect(bIsJSONString).is.false;
-
-            bIsJSONString = typecheck.isJSONString('{}');
-            expect(bIsJSONString).is.true;
-
-            bIsJSONString = typecheck.isJSONString('{"key": "value"}');
-            expect(bIsJSONString).is.true;
-
-            bIsJSONString = typecheck.isJSONString('["val1", "val2", "val3"]');
-            expect(bIsJSONString).is.true;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isJSONString(varFunction)).is.false;
+//TODO                expect(typecheck.isJSONString(varGeneraorFunction())).is.false;
+            });
         });
     });
 
     describe("isNotEmpty", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isNotEmpty(varBigInt)).is.true;
+                expect(typecheck.isNotEmpty(varBigIntObject)).is.true;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isNotEmpty(varBooleanFalse)).is.true;
+                expect(typecheck.isNotEmpty(varBooleanObjectFalse)).is.true;
+                expect(typecheck.isNotEmpty(varBooleanTrue)).is.true;
+                expect(typecheck.isNotEmpty(varBooleanObjectTrue)).is.true;
+            });
+
+            it("number", function () {
+                expect(typecheck.isNotEmpty(varNumber)).is.true;
+                expect(typecheck.isNotEmpty(varNumberObject)).is.true;
+            });
+
+            it("string", function () {
+                expect(typecheck.isNotEmpty(varStringEmpty)).is.false;
+                expect(typecheck.isNotEmpty(varString)).is.true;
+                expect(typecheck.isNotEmpty(varStringObject)).is.true;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isNotEmpty(varSymbol)).is.true;
+            });
+
+            it("null", function () {
+                expect(typecheck.isNotEmpty(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isNotEmpty(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isNotEmpty(varEmptyArray)).is.false;
+                expect(typecheck.isNotEmpty(varArray)).is.true;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isNotEmpty(varDate)).is.true;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isNotEmpty(varError)).is.true;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isNotEmpty(varMapEmpty)).is.false;
+                expect(typecheck.isNotEmpty(varMap)).is.true;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isNotEmpty(varObjectEmpty)).is.false;
+                expect(typecheck.isNotEmpty(varObject)).is.true;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isNotEmpty(varRegExp)).is.true;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isNotEmpty(varSetEmpty)).is.false;
+                expect(typecheck.isNotEmpty(varSet)).is.true;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isNotEmpty(varWeakMapEmpty)).is.false;
+                expect(typecheck.isNotEmpty(varWeakMap)).is.true;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isNotEmpty(varWeakSetEmpty)).is.false;
+                expect(typecheck.isNotEmpty(varWeakSet)).is.true;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsNotEmpty;
-            bIsNotEmpty = typecheck.isNotEmpty([]);
-            expect(bIsNotEmpty).is.false;
-
-            bIsNotEmpty = typecheck.isNotEmpty(42n);
-            expect(bIsNotEmpty).is.true;
-
-            bIsNotEmpty = typecheck.isNotEmpty(false);
-            expect(bIsNotEmpty).is.true;
-
-            bIsNotEmpty = typecheck.isNotEmpty(new Date());
-            expect(bIsNotEmpty).is.true;
-
-            bIsNotEmpty = typecheck.isNotEmpty(() => {});
-            expect(bIsNotEmpty).is.true;
-
-            bIsNotEmpty = typecheck.isNotEmpty(new Map());
-            expect(bIsNotEmpty).is.true;
-
-            bIsNotEmpty = typecheck.isNotEmpty(null);
-            expect(bIsNotEmpty).is.false;
-
-            bIsNotEmpty = typecheck.isNotEmpty(42);
-            expect(bIsNotEmpty).is.true;
-
-            bIsNotEmpty = typecheck.isNotEmpty({});
-            expect(bIsNotEmpty).is.false;
-
-            bIsNotEmpty = typecheck.isNotEmpty(/\d/);
-            expect(bIsNotEmpty).is.true;
-
-            bIsNotEmpty = typecheck.isNotEmpty(new Set());
-            expect(bIsNotEmpty).is.true;
-
-            bIsNotEmpty = typecheck.isNotEmpty("Hello World!");
-            expect(bIsNotEmpty).is.true;
-
-            bIsNotEmpty = typecheck.isNotEmpty(Symbol('foo'));
-            expect(bIsNotEmpty).is.true;
-
-            let undef;
-            bIsNotEmpty = typecheck.isNotEmpty(undef);
-            expect(bIsNotEmpty).is.false;
-
-            bIsNotEmpty = typecheck.isNotEmpty(new WeakMap());
-            expect(bIsNotEmpty).is.true;
-
-            bIsNotEmpty = typecheck.isNotEmpty(new WeakSet());
-            expect(bIsNotEmpty).is.true;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isNotEmpty(varFunction)).is.true;
+//TODO                expect(typecheck.isNotEmpty(varGeneraorFunction())).is.true;
+            });
         });
     });
 
     describe("isNotEmptyString", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isNotEmptyString(varBigInt)).is.false;
+                expect(typecheck.isNotEmptyString(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isNotEmptyString(varBooleanFalse)).is.false;
+                expect(typecheck.isNotEmptyString(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isNotEmptyString(varBooleanTrue)).is.false;
+                expect(typecheck.isNotEmptyString(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isNotEmptyString(varNumber)).is.false;
+                expect(typecheck.isNotEmptyString(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isNotEmptyString(varStringEmpty)).is.false;
+                expect(typecheck.isNotEmptyString(varString)).is.true;
+                expect(typecheck.isNotEmptyString(varStringObject)).is.true;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isNotEmptyString(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isNotEmptyString(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isNotEmptyString(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isNotEmptyString(varEmptyArray)).is.false;
+                expect(typecheck.isNotEmptyString(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isNotEmptyString(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isNotEmptyString(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isNotEmptyString(varMapEmpty)).is.false;
+                expect(typecheck.isNotEmptyString(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isNotEmptyString(varObjectEmpty)).is.false;
+                expect(typecheck.isNotEmptyString(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isNotEmptyString(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isNotEmptyString(varSetEmpty)).is.false;
+                expect(typecheck.isNotEmptyString(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isNotEmptyString(varWeakMapEmpty)).is.false;
+                expect(typecheck.isNotEmptyString(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isNotEmptyString(varWeakSetEmpty)).is.false;
+                expect(typecheck.isNotEmptyString(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsNotEmptyString;
-            bIsNotEmptyString = typecheck.isNotEmptyString([]);
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(42n);
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(false);
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(new Date());
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(() => {});
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(new Map());
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(null);
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(42);
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString({});
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(/\d/);
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(new Set());
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString("Hello World!");
-            expect(bIsNotEmptyString).is.true;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(Symbol('foo'));
-            expect(bIsNotEmptyString).is.false;
-
-            let undef;
-            bIsNotEmptyString = typecheck.isNotEmptyString(undef);
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(new WeakMap());
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(new WeakSet());
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString('');
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString('foo');
-            expect(bIsNotEmptyString).is.true;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(``);
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString(`foo`);
-            expect(bIsNotEmptyString).is.true;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString("");
-            expect(bIsNotEmptyString).is.false;
-
-            bIsNotEmptyString = typecheck.isNotEmptyString("foo");
-            expect(bIsNotEmptyString).is.true;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isNotEmptyString(varFunction)).is.false;
+//TODO                expect(typecheck.isNotEmptyString(varGeneraorFunction())).is.false;
+            });
         });
     });
 
     describe("isNull", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isNull(varBigInt)).is.false;
+                expect(typecheck.isNull(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isNull(varBooleanFalse)).is.false;
+                expect(typecheck.isNull(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isNull(varBooleanTrue)).is.false;
+                expect(typecheck.isNull(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isNull(varNumber)).is.false;
+                expect(typecheck.isNull(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isNull(varStringEmpty)).is.false;
+                expect(typecheck.isNull(varString)).is.false;
+                expect(typecheck.isNull(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isNull(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isNull(varNull)).is.true;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isNull(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isNull(varEmptyArray)).is.false;
+                expect(typecheck.isNull(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isNull(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isNull(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isNull(varMapEmpty)).is.false;
+                expect(typecheck.isNull(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isNull(varObjectEmpty)).is.false;
+                expect(typecheck.isNull(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isNull(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isNull(varSetEmpty)).is.false;
+                expect(typecheck.isNull(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isNull(varWeakMapEmpty)).is.false;
+                expect(typecheck.isNull(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isNull(varWeakSetEmpty)).is.false;
+                expect(typecheck.isNull(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsNull;
-            bIsNull = typecheck.isNull([]);
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull(42n);
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull(false);
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull(new Date());
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull(() => {});
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull(new Map());
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull(null);
-            expect(bIsNull).is.true;
-
-            bIsNull = typecheck.isNull(42);
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull({});
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull(/\d/);
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull(new Set());
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull("Hello World!");
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull(Symbol('foo'));
-            expect(bIsNull).is.false;
-
-            let undef;
-            bIsNull = typecheck.isNull(undef);
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull(new WeakMap());
-            expect(bIsNull).is.false;
-
-            bIsNull = typecheck.isNull(new WeakSet());
-            expect(bIsNull).is.false;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isNull(varFunction)).is.false;
+//TODO                expect(typecheck.isNull(varGeneraorFunction())).is.false;
+            });
         });
     });
 
     describe("isNumeric", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isDate(varBigInt)).is.false;
+                expect(typecheck.isNumeric(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isNumeric(varBooleanFalse)).is.false;
+                expect(typecheck.isNumeric(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isNumeric(varBooleanTrue)).is.false;
+                expect(typecheck.isNumeric(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isNumeric(varNumber)).is.true;
+                expect(typecheck.isNumeric(varNumberObject)).is.true;
+            });
+
+            it("string", function () {
+                expect(typecheck.isNumeric(varStringEmpty)).is.false;
+                expect(typecheck.isNumeric(varString)).is.false;
+                expect(typecheck.isNumeric(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isNumeric(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isNumeric(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isNumeric(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isNumeric(varEmptyArray)).is.false;
+                expect(typecheck.isNumeric(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isNumeric(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isNumeric(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isNumeric(varMapEmpty)).is.false;
+                expect(typecheck.isNumeric(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isNumeric(varObjectEmpty)).is.false;
+                expect(typecheck.isNumeric(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isNumeric(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isNumeric(varSetEmpty)).is.false;
+                expect(typecheck.isNumeric(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isNumeric(varWeakMapEmpty)).is.false;
+                expect(typecheck.isNumeric(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isNumeric(varWeakSetEmpty)).is.false;
+                expect(typecheck.isNumeric(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsNumeric;
-            bIsNumeric = typecheck.isNumeric([]);
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(42n);
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(false);
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(new Date());
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(() => {});
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(new Map());
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(null);
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(42);
-            expect(bIsNumeric).is.true;
-
-            bIsNumeric = typecheck.isNumeric({});
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(/\d/);
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(new Set());
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric("Hello World!");
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(Symbol('foo'));
-            expect(bIsNumeric).is.false;
-
-            let undef;
-            bIsNumeric = typecheck.isNumeric(undef);
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(new WeakMap());
-            expect(bIsNumeric).is.false;
-
-            bIsNumeric = typecheck.isNumeric(new WeakSet());
-            expect(bIsNumeric).is.false;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isNumeric(varFunction)).is.false;
+//TODO                expect(typecheck.isNumeric(varGeneraorFunction())).is.false;
+            });
         });
     });
 
     describe("isObject", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isObject(varBigInt)).is.false;
+                expect(typecheck.isObject(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isObject(varBooleanFalse)).is.false;
+                expect(typecheck.isObject(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isObject(varBooleanTrue)).is.false;
+                expect(typecheck.isObject(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isObject(varNumber)).is.false;
+                expect(typecheck.isObject(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isObject(varStringEmpty)).is.false;
+                expect(typecheck.isObject(varString)).is.false;
+                expect(typecheck.isObject(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isObject(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isObject(varNull)).is.true;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isObject(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isObject(varEmptyArray)).is.true;
+                expect(typecheck.isObject(varArray)).is.true;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isObject(varDate)).is.true;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isObject(varError)).is.true;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isObject(varMapEmpty)).is.true;
+                expect(typecheck.isObject(varMap)).is.true;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isObject(varObjectEmpty)).is.true;
+                expect(typecheck.isObject(varObject)).is.true;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isObject(varRegExp)).is.true;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isObject(varSetEmpty)).is.true;
+                expect(typecheck.isObject(varSet)).is.true;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isObject(varWeakMapEmpty)).is.true;
+                expect(typecheck.isObject(varWeakMap)).is.true;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isObject(varWeakSetEmpty)).is.true;
+                expect(typecheck.isObject(varWeakSet)).is.true;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsObject;
-            bIsObject = typecheck.isObject([]);
-            expect(bIsObject).is.true;
-
-            bIsObject = typecheck.isObject(42n);
-            expect(bIsObject).is.false;
-
-            bIsObject = typecheck.isObject(false);
-            expect(bIsObject).is.false;
-
-            bIsObject = typecheck.isObject(new Date());
-            expect(bIsObject).is.true;
-
-            bIsObject = typecheck.isObject(() => {});
-            expect(bIsObject).is.false;
-
-            bIsObject = typecheck.isObject(new Map());
-            expect(bIsObject).is.true;
-
-            bIsObject = typecheck.isObject(null);
-            expect(bIsObject).is.true;
-
-            bIsObject = typecheck.isObject(42);
-            expect(bIsObject).is.false;
-
-            bIsObject = typecheck.isObject({});
-            expect(bIsObject).is.true;
-
-            bIsObject = typecheck.isObject(/\d/);
-            expect(bIsObject).is.true;
-
-            bIsObject = typecheck.isObject(new Set());
-            expect(bIsObject).is.true;
-
-            bIsObject = typecheck.isObject("Hello World!");
-            expect(bIsObject).is.false;
-
-            bIsObject = typecheck.isObject(Symbol('foo'));
-            expect(bIsObject).is.false;
-
-            let undef;
-            bIsObject = typecheck.isObject(undef);
-            expect(bIsObject).is.false;
-
-            bIsObject = typecheck.isObject(new WeakMap());
-            expect(bIsObject).is.true;
-
-            bIsObject = typecheck.isObject(new WeakSet());
-            expect(bIsObject).is.true;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isObject(varFunction)).is.false;
+//TODO                expect(typecheck.isObject(varGeneraorFunction())).is.false;
+            });
         });
     });
 
     describe("isString", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isString(varBigInt)).is.false;
+                expect(typecheck.isString(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isString(varBooleanFalse)).is.false;
+                expect(typecheck.isString(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isString(varBooleanTrue)).is.false;
+                expect(typecheck.isString(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isString(varNumber)).is.false;
+                expect(typecheck.isString(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isString(varStringEmpty)).is.true;
+                expect(typecheck.isString(varString)).is.true;
+                expect(typecheck.isString(varStringObject)).is.true;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isString(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isString(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isString(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isString(varEmptyArray)).is.false;
+                expect(typecheck.isString(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isString(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isString(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isString(varMapEmpty)).is.false;
+                expect(typecheck.isString(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isString(varObjectEmpty)).is.false;
+                expect(typecheck.isString(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isString(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isString(varSetEmpty)).is.false;
+                expect(typecheck.isString(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isString(varWeakMapEmpty)).is.false;
+                expect(typecheck.isString(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isString(varWeakSetEmpty)).is.false;
+                expect(typecheck.isString(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsString;
-            bIsString = typecheck.isString([]);
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString(42n);
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString(false);
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString(new Date());
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString(() => {});
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString(new Map());
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString(null);
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString(42);
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString({});
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString(/\d/);
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString(new Set());
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString("Hello World!");
-            expect(bIsString).is.true;
-
-            bIsString = typecheck.isString(Symbol('foo'));
-            expect(bIsString).is.false;
-
-            let undef;
-            bIsString = typecheck.isString(undef);
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString(new WeakMap());
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString(new WeakSet());
-            expect(bIsString).is.false;
-
-            bIsString = typecheck.isString('');
-            expect(bIsString).is.true;
-
-            bIsString = typecheck.isString(``);
-            expect(bIsString).is.true;
-
-            bIsString = typecheck.isString("");
-            expect(bIsString).is.true;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isString(varFunction)).is.false;
+//TODO                expect(typecheck.isString(varGeneraorFunction())).is.false;
+            });
         });
     });
 
     describe("isSymbol", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isSymbol(varBigInt)).is.false;
+                expect(typecheck.isSymbol(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isSymbol(varBooleanFalse)).is.false;
+                expect(typecheck.isSymbol(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isSymbol(varBooleanTrue)).is.false;
+                expect(typecheck.isSymbol(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isSymbol(varNumber)).is.false;
+                expect(typecheck.isSymbol(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isSymbol(varStringEmpty)).is.false;
+                expect(typecheck.isSymbol(varString)).is.false;
+                expect(typecheck.isSymbol(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isSymbol(varSymbol)).is.true;
+            });
+
+            it("null", function () {
+                expect(typecheck.isSymbol(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isSymbol(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isSymbol(varEmptyArray)).is.false;
+                expect(typecheck.isSymbol(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isSymbol(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isSymbol(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isSymbol(varMapEmpty)).is.false;
+                expect(typecheck.isSymbol(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isSymbol(varObjectEmpty)).is.false;
+                expect(typecheck.isSymbol(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isSymbol(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isSymbol(varSetEmpty)).is.false;
+                expect(typecheck.isSymbol(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isSymbol(varWeakMapEmpty)).is.false;
+                expect(typecheck.isSymbol(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isSymbol(varWeakSetEmpty)).is.false;
+                expect(typecheck.isSymbol(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsSymbol;
-            bIsSymbol = typecheck.isSymbol([]);
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(42n);
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(false);
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(new Date());
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(() => {});
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(new Map());
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(null);
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(42);
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol({});
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(/\d/);
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(new Set());
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol("Hello World!");
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(Symbol('foo'));
-            expect(bIsSymbol).is.true;
-
-            let undef;
-            bIsSymbol = typecheck.isSymbol(undef);
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(new WeakMap());
-            expect(bIsSymbol).is.false;
-
-            bIsSymbol = typecheck.isSymbol(new WeakSet());
-            expect(bIsSymbol).is.false;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isSymbol(varFunction)).is.false;
+//TODO                expect(typecheck.isSymbol(varGeneraorFunction())).is.false;
+            });
         });
     });
 
     describe("isTrue", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isTrue(varBigInt)).is.false;
+                expect(typecheck.isTrue(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isTrue(varBooleanFalse)).is.false;
+                expect(typecheck.isTrue(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isTrue(varBooleanTrue)).is.true;
+                expect(typecheck.isTrue(varBooleanObjectTrue)).is.true;
+            });
+
+            it("number", function () {
+                expect(typecheck.isTrue(varNumber)).is.false;
+                expect(typecheck.isTrue(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isTrue(varStringEmpty)).is.false;
+                expect(typecheck.isTrue(varString)).is.false;
+                expect(typecheck.isTrue(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isTrue(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isTrue(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isTrue(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isTrue(varEmptyArray)).is.false;
+                expect(typecheck.isTrue(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isTrue(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isTrue(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isTrue(varMapEmpty)).is.false;
+                expect(typecheck.isTrue(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isTrue(varObjectEmpty)).is.false;
+                expect(typecheck.isTrue(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isTrue(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isTrue(varSetEmpty)).is.false;
+                expect(typecheck.isTrue(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isTrue(varWeakMapEmpty)).is.false;
+                expect(typecheck.isTrue(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isTrue(varWeakSetEmpty)).is.false;
+                expect(typecheck.isTrue(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isTrue(varFunction)).is.false;
+//TODO                expect(typecheck.isTrue(varGeneraorFunction())).is.false;
+            });
         });
 
-        it("TODO", function () {
+        describe("check false value objects", function() {
+            it("characters", function () {
+                for ( let falseChar of typecheck.getConfig().falseValues.character ) {
+                    expect(typecheck.isTrue(falseChar)).is.false;
+                }
+            });
+
+            it("numbers", function () {
+                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                    expect(typecheck.isTrue(falseNumber)).is.false;
+                }
+            });
+
+            it("string", function () {
+                for ( let falseString of typecheck.getConfig().falseValues.string ) {
+                    expect(typecheck.isTrue(falseString)).is.false;
+                }
+            });
         });
 
-        it("checks for array type", function () {
-            let bIsTrue;
-            bIsTrue = typecheck.isTrue([]);
-            expect(bIsTrue).is.false;
+        describe("check true value objects", function() {
+            it("characters", function () {
+                for ( let trueChar of typecheck.getConfig().trueValues.character ) {
+                    expect(typecheck.isTrue(trueChar)).is.true;
+                }
+            });
 
-            bIsTrue = typecheck.isTrue(42n);
-            expect(bIsTrue).is.false;
+            it("numbers", function () {
+                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
+                    expect(typecheck.isTrue(trueNumber)).is.true;
+                }
+            });
 
-            bIsTrue = typecheck.isTrue(false);
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue(new Date());
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue(() => {});
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue(new Map());
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue(null);
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue(42);
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue({});
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue(/\d/);
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue(new Set());
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("Hello World!");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue(Symbol('foo'));
-            expect(bIsTrue).is.false;
-
-            let undef;
-            bIsTrue = typecheck.isTrue(undef);
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue(new WeakMap());
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue(new WeakSet());
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue('n');
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue('N');
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue('0');
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue(0);
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("false");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("failure");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("err");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("error");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("fault");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("no");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("wrong");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("off");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("FALSE");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("False");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("FaLsE");
-            expect(bIsTrue).is.false;
-
-            bIsTrue = typecheck.isTrue("j");
-            expect(bIsTrue).is.true;
-
-            bIsTrue = typecheck.isTrue("J");
-            expect(bIsTrue).is.true;
-
-            bIsTrue = typecheck.isTrue("y");
-            expect(bIsTrue).is.true;
-
-            bIsTrue = typecheck.isTrue("Y");
-            expect(bIsTrue).is.true;
-
-            bIsTrue = typecheck.isTrue("1");
-            expect(bIsTrue).is.true;
-
-            bIsTrue = typecheck.isTrue(1);
-            expect(bIsTrue).is.true;
-
-            bIsTrue = typecheck.isTrue("true");
-            expect(bIsTrue).is.true;
-
-            bIsTrue = typecheck.isTrue("success");
-            expect(bIsTrue).is.true;
-
-            bIsTrue = typecheck.isTrue("ok");
-            expect(bIsTrue).is.true;
-
-            bIsTrue = typecheck.isTrue("yes");
-            expect(bIsTrue).is.true;
-
-            bIsTrue = typecheck.isTrue("right");
-            expect(bIsTrue).is.true;
-
-            bIsTrue = typecheck.isTrue("on");
-            expect(bIsTrue).is.true;
+            it("string", function () {
+                for ( let trueString of typecheck.getConfig().trueValues.string ) {
+                    expect(typecheck.isTrue(trueString)).is.true;
+                }
+            });
         });
     });
 
     describe("isTrueBoolean", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isTrueBoolean(varBigInt)).is.false;
+                expect(typecheck.isTrueBoolean(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isTrueBoolean(varBooleanFalse)).is.false;
+                expect(typecheck.isTrueBoolean(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isTrueBoolean(varBooleanTrue)).is.true;
+                expect(typecheck.isTrueBoolean(varBooleanObjectTrue)).is.true;
+            });
+
+            it("number", function () {
+                expect(typecheck.isTrueBoolean(varNumber)).is.false;
+                expect(typecheck.isTrueBoolean(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isTrueBoolean(varStringEmpty)).is.false;
+                expect(typecheck.isTrueBoolean(varString)).is.false;
+                expect(typecheck.isTrueBoolean(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isTrueBoolean(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isTrueBoolean(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isTrueBoolean(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isTrueBoolean(varEmptyArray)).is.false;
+                expect(typecheck.isTrueBoolean(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isTrueBoolean(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isTrueBoolean(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isTrueBoolean(varMapEmpty)).is.false;
+                expect(typecheck.isTrueBoolean(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isTrueBoolean(varObjectEmpty)).is.false;
+                expect(typecheck.isTrueBoolean(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isTrueBoolean(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isTrueBoolean(varSetEmpty)).is.false;
+                expect(typecheck.isTrueBoolean(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isTrueBoolean(varWeakMapEmpty)).is.false;
+                expect(typecheck.isTrueBoolean(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isTrueBoolean(varWeakSetEmpty)).is.false;
+                expect(typecheck.isTrueBoolean(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isTrueBoolean(varFunction)).is.false;
+//TODO                expect(typecheck.isTrueBoolean(varGeneraorFunction())).is.false;
+            });
         });
 
-        it("TODO", function () {
+        describe("check false value objects", function() {
+            it("characters", function () {
+                for ( let falseChar of typecheck.getConfig().falseValues.character ) {
+                    expect(typecheck.isTrueBoolean(falseChar)).is.false;
+                }
+            });
+
+            it("numbers", function () {
+                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                    expect(typecheck.isTrueBoolean(falseNumber)).is.false;
+                }
+            });
+
+            it("string", function () {
+                for ( let falseString of typecheck.getConfig().falseValues.string ) {
+                    expect(typecheck.isTrueBoolean(falseString)).is.false;
+                }
+            });
         });
 
-        it("checks for array type", function () {
-            let bIsTrueBoolean;
-            bIsTrueBoolean = typecheck.isTrueBoolean([]);
-            expect(bIsTrueBoolean).is.false;
+        describe("check true value objects", function() {
+            it("characters", function () {
+                for ( let trueChar of typecheck.getConfig().trueValues.character ) {
+                    expect(typecheck.isTrueBoolean(trueChar)).is.false;
+                }
+            });
 
-            bIsTrueBoolean = typecheck.isTrueBoolean(42n);
-            expect(bIsTrueBoolean).is.false;
+            it("numbers", function () {
+                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
+                    expect(typecheck.isTrueBoolean(trueNumber)).is.false;
+                }
+            });
 
-            bIsTrueBoolean = typecheck.isTrueBoolean(false);
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean(new Date());
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean(() => {});
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean(new Map());
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean(null);
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean(42);
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean({});
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean(/\d/);
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean(new Set());
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean("Hello World!");
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean(Symbol('foo'));
-            expect(bIsTrueBoolean).is.false;
-
-            let undef;
-            bIsTrueBoolean = typecheck.isTrueBoolean(undef);
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean(new WeakMap());
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean(new WeakSet());
-            expect(bIsTrueBoolean).is.false;
-
-            bIsTrueBoolean = typecheck.isTrueBoolean(true);
-            expect(bIsTrueBoolean).is.true;
+            it("string", function () {
+                for ( let trueString of typecheck.getConfig().trueValues.string ) {
+                    expect(typecheck.isTrueBoolean(trueString)).is.false;
+                }
+            });
         });
     });
 
     describe("isTrueNumber", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isTrueNumber(varBigInt)).is.false;
+                expect(typecheck.isTrueNumber(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isTrueNumber(varBooleanFalse)).is.false;
+                expect(typecheck.isTrueNumber(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isTrueNumber(varBooleanTrue)).is.false;
+                expect(typecheck.isTrueNumber(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isTrueNumber(varNumber)).is.false;
+                expect(typecheck.isTrueNumber(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isTrueNumber(varStringEmpty)).is.false;
+                expect(typecheck.isTrueNumber(varString)).is.false;
+                expect(typecheck.isTrueNumber(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isTrueNumber(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isTrueNumber(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isTrueNumber(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isTrueNumber(varEmptyArray)).is.false;
+                expect(typecheck.isTrueNumber(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isTrueNumber(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isTrueNumber(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isTrueNumber(varMapEmpty)).is.false;
+                expect(typecheck.isTrueNumber(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isTrueNumber(varObjectEmpty)).is.false;
+                expect(typecheck.isTrueNumber(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isTrueNumber(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isTrueNumber(varSetEmpty)).is.false;
+                expect(typecheck.isTrueNumber(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isTrueNumber(varWeakMapEmpty)).is.false;
+                expect(typecheck.isTrueNumber(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isTrueNumber(varWeakSetEmpty)).is.false;
+                expect(typecheck.isTrueNumber(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isTrueNumber(varFunction)).is.false;
+//TODO                expect(typecheck.isTrueNumber(varGeneraorFunction())).is.false;
+            });
         });
 
-        it("TODO", function () {
+        describe("check false value objects", function() {
+            it("characters", function () {
+                for ( let falseChar of typecheck.getConfig().falseValues.character ) {
+                    expect(typecheck.isTrueNumber(falseChar)).is.false;
+                }
+            });
+
+            it("numbers", function () {
+                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                    expect(typecheck.isTrueNumber(falseNumber)).is.false;
+                }
+            });
+
+            it("string", function () {
+                for ( let falseString of typecheck.getConfig().falseValues.string ) {
+                    expect(typecheck.isTrueNumber(falseString)).is.false;
+                }
+            });
         });
 
-        it("checks for array type", function () {
-            let bIsTrueNumber;
-            bIsTrueNumber = typecheck.isTrueNumber([]);
-            expect(bIsTrueNumber).is.false;
+        describe("check true value objects", function() {
+            it("characters", function () {
+                for ( let trueChar of typecheck.getConfig().trueValues.character ) {
+                    expect(typecheck.isTrueNumber(trueChar)).is.false;
+                }
+            });
 
-            bIsTrueNumber = typecheck.isTrueNumber(42n);
-            expect(bIsTrueNumber).is.false;
+            it("numbers", function () {
+                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
+                    expect(typecheck.isTrueNumber(trueNumber)).is.true;
+                }
+            });
 
-            bIsTrueNumber = typecheck.isTrueNumber(false);
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(new Date());
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(() => {});
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(new Map());
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(null);
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(42);
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber({});
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(/\d/);
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(new Set());
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber("Hello World!");
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(Symbol('foo'));
-            expect(bIsTrueNumber).is.false;
-
-            let undef;
-            bIsTrueNumber = typecheck.isTrueNumber(undef);
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(new WeakMap());
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(new WeakSet());
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(0);
-            expect(bIsTrueNumber).is.false;
-
-            bIsTrueNumber = typecheck.isTrueNumber(1);
-            expect(bIsTrueNumber).is.true;
-
-            bIsTrueNumber = typecheck.isTrueNumber(2);
-            expect(bIsTrueNumber).is.false;
+            it("string", function () {
+                for ( let trueString of typecheck.getConfig().trueValues.string ) {
+                    expect(typecheck.isTrueNumber(trueString)).is.false;
+                }
+            });
         });
     });
 
     describe("isTrueString", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isTrueString(varBigInt)).is.false;
+                expect(typecheck.isTrueString(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isTrueString(varBooleanFalse)).is.false;
+                expect(typecheck.isTrueString(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isTrueString(varBooleanTrue)).is.false;
+                expect(typecheck.isTrueString(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isTrueString(varNumber)).is.false;
+                expect(typecheck.isTrueString(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isTrueString(varStringEmpty)).is.false;
+                expect(typecheck.isTrueString(varString)).is.false;
+                expect(typecheck.isTrueString(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isTrueString(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isTrueString(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isTrueString(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isTrueString(varEmptyArray)).is.false;
+                expect(typecheck.isTrueString(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isTrueString(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isTrueString(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isTrueString(varMapEmpty)).is.false;
+                expect(typecheck.isTrueString(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isTrueString(varObjectEmpty)).is.false;
+                expect(typecheck.isTrueString(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isTrueString(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isTrueString(varSetEmpty)).is.false;
+                expect(typecheck.isTrueString(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isTrueString(varWeakMapEmpty)).is.false;
+                expect(typecheck.isTrueString(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isTrueString(varWeakSetEmpty)).is.false;
+                expect(typecheck.isTrueString(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isTrueString(varFunction)).is.false;
+//TODO                expect(typecheck.isTrueString(varGeneraorFunction())).is.false;
+            });
         });
 
-        it("TODO", function () {
+        describe("check false value objects", function() {
+            it("characters", function () {
+                for ( let falseChar of typecheck.getConfig().falseValues.character ) {
+                    expect(typecheck.isTrueString(falseChar)).is.false;
+                }
+            });
+
+            it("numbers", function () {
+                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                    expect(typecheck.isTrueString(falseNumber)).is.false;
+                }
+            });
+
+            it("string", function () {
+                for ( let falseString of typecheck.getConfig().falseValues.string ) {
+                    expect(typecheck.isTrueString(falseString)).is.false;
+                }
+            });
         });
 
-        it("checks for array type", function () {
-            let bIsTrueString;
-            bIsTrueString = typecheck.isTrueString([]);
-            expect(bIsTrueString).is.false;
+        describe("check true value objects", function() {
+            it("characters", function () {
+                for ( let trueChar of typecheck.getConfig().trueValues.character ) {
+                    expect(typecheck.isTrueString(trueChar)).is.true;
+                }
+            });
 
-            bIsTrueString = typecheck.isTrueString(42n);
-            expect(bIsTrueString).is.false;
+            it("numbers", function () {
+                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
+                    expect(typecheck.isTrueString(trueNumber)).is.false;
+                }
+            });
 
-            bIsTrueString = typecheck.isTrueString(false);
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString(new Date());
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString(() => {});
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString(new Map());
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString(null);
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString(42);
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString({});
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString(/\d/);
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString(new Set());
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("Hello World!");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString(Symbol('foo'));
-            expect(bIsTrueString).is.false;
-
-            let undef;
-            bIsTrueString = typecheck.isTrueString(undef);
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString(new WeakMap());
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString(new WeakSet());
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString('n');
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString('N');
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString('0');
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("false");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("failure");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("err");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("error");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("fault");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("no");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("wrong");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("off");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("FALSE");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("False");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("FaLsE");
-            expect(bIsTrueString).is.false;
-
-            bIsTrueString = typecheck.isTrueString("j");
-            expect(bIsTrueString).is.true;
-
-            bIsTrueString = typecheck.isTrueString("J");
-            expect(bIsTrueString).is.true;
-
-            bIsTrueString = typecheck.isTrueString("y");
-            expect(bIsTrueString).is.true;
-
-            bIsTrueString = typecheck.isTrueString("Y");
-            expect(bIsTrueString).is.true;
-
-            bIsTrueString = typecheck.isTrueString("1");
-            expect(bIsTrueString).is.true;
-
-            bIsTrueString = typecheck.isTrueString("true");
-            expect(bIsTrueString).is.true;
-
-            bIsTrueString = typecheck.isTrueString("success");
-            expect(bIsTrueString).is.true;
-
-            bIsTrueString = typecheck.isTrueString("ok");
-            expect(bIsTrueString).is.true;
-
-            bIsTrueString = typecheck.isTrueString("yes");
-            expect(bIsTrueString).is.true;
-
-            bIsTrueString = typecheck.isTrueString("right");
-            expect(bIsTrueString).is.true;
-
-            bIsTrueString = typecheck.isTrueString("on");
-            expect(bIsTrueString).is.true;
+            it("string", function () {
+                for ( let trueString of typecheck.getConfig().trueValues.string ) {
+                    expect(typecheck.isTrueString(trueString)).is.true;
+                }
+            });
         });
     });
 
     describe("isUndefined", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isUndefined(varBigInt)).is.false;
+                expect(typecheck.isUndefined(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isUndefined(varBooleanFalse)).is.false;
+                expect(typecheck.isUndefined(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isUndefined(varBooleanTrue)).is.false;
+                expect(typecheck.isUndefined(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isUndefined(varNumber)).is.false;
+                expect(typecheck.isUndefined(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isUndefined(varStringEmpty)).is.false;
+                expect(typecheck.isUndefined(varString)).is.false;
+                expect(typecheck.isUndefined(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isUndefined(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isUndefined(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isUndefined(varUndefined)).is.true;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isUndefined(varEmptyArray)).is.false;
+                expect(typecheck.isUndefined(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isUndefined(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isUndefined(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isUndefined(varMapEmpty)).is.false;
+                expect(typecheck.isUndefined(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isUndefined(varObjectEmpty)).is.false;
+                expect(typecheck.isUndefined(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isUndefined(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isUndefined(varSetEmpty)).is.false;
+                expect(typecheck.isUndefined(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isUndefined(varWeakMapEmpty)).is.false;
+                expect(typecheck.isUndefined(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isUndefined(varWeakSetEmpty)).is.false;
+                expect(typecheck.isUndefined(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsUndefined;
-            bIsUndefined = typecheck.isUndefined([]);
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined(42n);
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined(false);
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined(new Date());
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined(() => {});
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined(new Map());
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined(null);
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined(42);
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined({});
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined(/\d/);
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined(new Set());
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined("Hello World!");
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined(Symbol('foo'));
-            expect(bIsUndefined).is.false;
-
-            let undef;
-            bIsUndefined = typecheck.isUndefined(undef);
-            expect(bIsUndefined).is.true;
-
-            bIsUndefined = typecheck.isUndefined(new WeakMap());
-            expect(bIsUndefined).is.false;
-
-            bIsUndefined = typecheck.isUndefined(new WeakSet());
-            expect(bIsUndefined).is.false;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isUndefined(varFunction)).is.false;
+//TODO                expect(typecheck.isUndefined(varGeneraorFunction())).is.false;
+            });
         });
     });
 
     describe("isUnknown", function() {
-        it("checks primitive types", function () {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isUnknown(varBigInt)).is.false;
+                expect(typecheck.isUnknown(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isUnknown(varBooleanFalse)).is.false;
+                expect(typecheck.isUnknown(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isUnknown(varBooleanTrue)).is.false;
+                expect(typecheck.isUnknown(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isDate(varNumber)).is.false;
+                expect(typecheck.isUnknown(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isUnknown(varStringEmpty)).is.false;
+                expect(typecheck.isUnknown(varString)).is.false;
+                expect(typecheck.isUnknown(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isUnknown(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isUnknown(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isUnknown(varUndefined)).is.false;
+            });
         });
 
-        it("checks object type/instances", function () {
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isUnknown(varEmptyArray)).is.false;
+                expect(typecheck.isUnknown(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isUnknown(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isUnknown(varError)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isUnknown(varMapEmpty)).is.false;
+                expect(typecheck.isUnknown(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isUnknown(varObjectEmpty)).is.false;
+                expect(typecheck.isUnknown(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isUnknown(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isUnknown(varSetEmpty)).is.false;
+                expect(typecheck.isUnknown(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isUnknown(varWeakMapEmpty)).is.false;
+                expect(typecheck.isUnknown(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isUnknown(varWeakSetEmpty)).is.false;
+                expect(typecheck.isUnknown(varWeakSet)).is.false;
+            });
         });
 
-        it("checks additional types", function () {
-        });
-
-        it("TODO", function () {
-        });
-
-        it("checks for array type", function () {
-            let bIsUnknown;
-            bIsUnknown = typecheck.isUnknown([]);
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(42n);
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(false);
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(new Date());
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(() => {});
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(new Map());
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(null);
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(42);
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown({});
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(/\d/);
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(new Set());
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown("Hello World!");
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(Symbol('foo'));
-            expect(bIsUnknown).is.false;
-
-            let undef;
-            bIsUnknown = typecheck.isUnknown(undef);
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(new WeakMap());
-            expect(bIsUnknown).is.false;
-
-            bIsUnknown = typecheck.isUnknown(new WeakSet());
-            expect(bIsUnknown).is.false;
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isUnknown(varFunction)).is.false;
+//TODO                expect(typecheck.isUnknown(varGeneraorFunction())).is.false;
+            });
         });
     });
 
