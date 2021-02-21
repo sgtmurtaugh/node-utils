@@ -3,7 +3,6 @@
 const config = require('config');
 
 const TYPE_ARRAY = 'array';
-const TYPE_ARRAY_OBJECT = '[object Array]';
 const TYPE_BIGINT = 'bigint';
 const TYPE_BIGINT_OBJECT = '[object BigInt]';
 const TYPE_BOOLEAN = 'boolean';
@@ -14,6 +13,8 @@ const TYPE_ERROR = 'error';
 const TYPE_ERROR_OBJECT = '[object Error]';
 const TYPE_FUNCTION = 'function';
 const TYPE_FUNCTION_OBJECT = '[object Function]';
+const TYPE_GENERATOR = 'generator';
+const TYPE_GENERATOR_OBJECT = '[object Generator]';
 const TYPE_GENERATOR_FUNCTION = 'generatorfunction';
 const TYPE_GENERATOR_FUNCTION_OBJECT = '[object GeneratorFunction]';
 const TYPE_MAP = 'map';
@@ -64,36 +65,81 @@ module.exports = {
 	 * @return {string}
 	 * <p>Checks the type of the given parameter. Returns the following values:
 	 * <dl>
-	 *  <dt>'array'</dt>
-	 *  <dd>If the param is not null and the method <code>Array.isArray()</code> returns true the String 'array' is returned.</dd>
+	 *  <dt>{@code #TYPE_ARRAY}</dt>
+	 *  <dd>If delegate method <code>isArray</code> returns true.</dd>
 	 *
-	 *  <dt>'function'</dt>
-	 *  <dd>If the param is a function the String 'object' is returned.</dd>
+	 *  <dt>{@code #TYPE_FUNCTION}</dt>
+	 *  <dd>If delegate method <code>isFunction</code> returns true.</dd>
 	 *
-	 *  <dt>Primitives 'boolean', 'bigint', 'number', 'string', 'symbol'</dt>
-	 *  <dd>If the param is type of Boolean, BigInt, Number, String or Symbol the lowercase String of the Type is returned.</dd>
+	 *  <dt>{@code #TYPE_GENERATOR_FUNCTION}</dt>
+	 *  <dd>If delegate method <code>isGeneratorFunction</code> returns true.</dd>
 	 *
-	 *  <dt>'null'</dt>
-	 *  <dd>If the param is null the String 'null' is returned.</dd>
+	 *  <dt>{@code #TYPE_BIGINT}</dt>
+	 *  <dd>If delegate method <code>isBigInt</code> returns true.</dd>
 	 *
-	 *  <dt>'object'</dt>
+	 *  <dt>{@code #TYPE_BOOLEAN}</dt>
+	 *  <dd>If delegate method <code>isBoolean</code> returns true.</dd>
+
+	 *  <dt>{@code #TYPE_NUMBER}</dt>
+	 *  <dd>If delegate method <code>isNumber</code> returns true.</dd>
+
+	 *  <dt>{@code #TYPE_STRING}</dt>
+	 *  <dd>If delegate method <code>isString</code> returns true.</dd>
+
+	 *  <dt>{@code #TYPE_SYMBOL}</dt>
+	 *  <dd>If delegate method <code>isSymbol</code> returns true.</dd>
+
+	 *  <dt>{@code #TYPE_NULL}</dt>
+	 *  <dd>If delegate method <code>isNull</code> returns true.</dd>
+	 *
+	 *  <dt>{@code #TYPE_OBJECT}</dt>
 	 *  <dd>
 	 *      If the param is null or of type Object the String 'object' is returned. Special checked instances are:
 	 *      <ul>
-	 *          <li>Date
-	 *          <li>Map
-	 *          <li>RegExp
-	 *          <li>Set
-	 *          <li>WeakerMap
-	 *          <li>WeakerSet
+	 *          <li>
+	 *              <dl>
+	 *                  <dt>{@code #TYPE_DATE}</dt>
+	 *                  <dd>If delegate method <code>isDate</code> returns true.</dd>
+	 *              </dl>
+	 *          </li>
+	 *          <li>
+	 *              <dl>
+	 *                  <dt>{@code #TYPE_MAP}</dt>
+	 *                  <dd>If delegate method <code>isMap</code> returns true.</dd>
+	 *              </dl>
+	 *          </li>
+	 *          <li>
+	 *              <dl>
+	 *                  <dt>{@code #TYPE_RegExp}</dt>
+	 *                  <dd>If delegate method <code>isRegExp</code> returns true.</dd>
+	 *              </dl>
+	 *          </li>
+	 *          <li>
+	 *              <dl>
+	 *                  <dt>{@code #TYPE_SET}</dt>
+	 *                  <dd>If delegate method <code>isSet</code> returns true.</dd>
+	 *              </dl>
+	 *          </li>
+	 *          <li>
+	 *              <dl>
+	 *                  <dt>{@code #TYPE_WEAKER_MAP}</dt>
+	 *                  <dd>If delegate method <code>isWeakerMap</code> returns true.</dd>
+	 *              </dl>
+	 *          </li>
+	 *          <li>
+	 *              <dl>
+	 *                  <dt>{@code #TYPE_WEAKER_SET}</dt>
+	 *                  <dd>If delegate method <code>isWeakerSet</code> returns true.</dd>
+	 *              </dl>
+	 *          </li>
 	 *      </ul>.
 	 *      In these cases also the lowercase string of the type is returned.
 	 *  </dd>
 	 *
-	 *  <dt>'undefined'</dt>
-	 *  <dd>If the param is undefined the String 'undefined' is returned.</dd>
+	 *  <dt>{@code #TYPE_UNDEFINED}</dt>
+	 *  <dd>If delegate method <code>isArray</code> returns true.</dd>
 	 *
-	 *  <dt>'unknown'</dt>
+	 *  <dt>{@code #TYPE_UNKNOWN}</dt>
 	 *  <dd>If the param is not null and not one of the other mentioned types the value 'unknown' is returned.</dd>
 	 * </dl>
 	 */
@@ -126,6 +172,9 @@ module.exports = {
 			}
 			else if (this.isFunction(obj)) {
 				return TYPE_FUNCTION;
+			}
+			else if (this.isGeneratorFunction(obj)) {
+				return TYPE_GENERATOR_FUNCTION;
 			}
 			else if (this.isObject(obj)) {
 				if (this.isDate(obj)) {
@@ -163,17 +212,29 @@ module.exports = {
 	 * isArray
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'array' otherwise false.
+	 * <p>Delegates to the <code>Array.isArray()</code> mehod. 
 	 */
 	'isArray': function (obj) {
 		return (Array.isArray(obj));
 	},
 
 	/**
+	 * isBigInt
+	 * @param obj
+	 * @return {boolean}
+	 * <p>If the param is typeof {@code #TYPE_BIGINT} or the deeptype is equals {@code #TYPE_BIGINT_OBJECT} true is
+	 * returned.
+	 */
+	'isBigInt': function (obj) {
+		return (TYPE_BIGINT === typeof obj || TYPE_BIGINT_OBJECT === toString.call(obj));
+	},
+
+	/**
 	 * isBoolean
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'boolean' otherwise false.
+	 * <p>If the param is type of {@code #TYPE_BOOLEAN} or the deeptype is equals {@code #TYPE_BOOLEAN_OBJECT} true is
+	 * returned.
 	 */
 	'isBoolean': function (obj) {
 		return (TYPE_BOOLEAN === typeof obj || TYPE_BOOLEAN_OBJECT === toString.call(obj));
@@ -183,27 +244,18 @@ module.exports = {
 	 * isBooleanValue
 	 * @param obj
 	 * @return {boolean}
-	 * <p>TODO
+	 * <p>If the object represents a true or false value true is returned.
 	 */
 	'isBooleanValue': function (obj) {
 		return ( this.isTrue( obj ) || this.isFalse( obj ) );
 	},
 
 	/**
-	 * isBigInt
-	 * @param obj
-	 * @return {boolean}
-	 * <p>TODO
-	 */
-	'isBigInt': function (obj) {
-		return (TYPE_BIGINT === typeof obj || TYPE_BIGINT_OBJECT === toString.call(obj));
-	},
-
-	/**
 	 * isDate
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'date' otherwise false.
+	 * <p>If the param is type of {@code #TYPE_DATE} or the deeptype is equals {@code #TYPE_DATE_OBJECT} true is
+	 * returned.
 	 */
 	'isDate': function (obj) {
 		return (TYPE_DATE === typeof obj || TYPE_DATE_OBJECT === toString.call(obj));
@@ -213,30 +265,30 @@ module.exports = {
 	 * isEmpty
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Checks the value depending on the type of the parameter object. Returns true, if the obj is null/undefined, an
-	 * empty Array or an empty String, otherwise true will be returned.
+	 * <p>Checks the value depending on the type of the parameter object. Returns true, if the obj is null/undefined,
+	 * or empty objects of type array, Map, Set, String, WeakMap or WeakSet.
 	 */
 	'isEmpty': function (obj) {
-		if (this.isNull(obj) || this.isUndefined(obj)) {
+		if (this.isUndefined(obj) || this.isNull(obj)) {
 			return true;
 		}
 		else if (this.isArray(obj)) {
 			return (obj.length === 0);
 		}
 		else if (this.isMap(obj)) {
-			return (obj.length === 0);
+			return (obj.size === 0);
 		}
 		else if (this.isSet(obj)) {
-			return (obj.length === 0);
+			return (obj.size === 0);
 		}
 		else if (this.isString(obj)) {
 			return (obj.trim().length === 0);
 		}
 		else if (this.isWeakMap(obj)) {
-			return (obj.length === 0);
+			return true;	// language related no check possible!
 		}
 		else if (this.isWeakSet(obj)) {
-			return (obj.length === 0);
+			return true;	// language related no check possible!
 		}
 		else if (this.isObject(obj)) {
 			// because Object.keys(new Date()).length === 0;
@@ -260,7 +312,8 @@ module.exports = {
 	 * isError
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'error' otherwise false.
+	 * <p>If the param is typeof {@code #TYPE_ERROR} or the deeptype is equals {@code #TYPE_ERROR_OBJECT} true is
+	 * returned.
 	 */
 	'isError': function (obj) {
 		return (TYPE_ERROR === typeof obj || TYPE_ERROR_OBJECT === toString.call(obj));
@@ -270,7 +323,7 @@ module.exports = {
 	 * isFalse
 	 * @param obj
 	 * @return {boolean}
-	 * <p>
+	 * <p>TODO
 	 */
 	'isFalse': function (obj) {
 		if (this.isBoolean(obj)) {
@@ -289,7 +342,7 @@ module.exports = {
 	 * isFalseBoolean
 	 * @param boolean {boolean}
 	 * @return {boolean}
-	 * <p>
+	 * <p>TODO
 	 */
 	'isFalseBoolean': function (boolean) {
 		return ( this.isBoolean(boolean) && ( false === boolean ) );
@@ -299,7 +352,7 @@ module.exports = {
 	 * isFalseNumber
 	 * @param number {number}
 	 * @return {boolean}
-	 * <p>
+	 * <p>TODO
 	 */
 	'isFalseNumber': function (number) {
 		let bIs = false;
@@ -322,7 +375,7 @@ module.exports = {
 	 * isFalseString
 	 * @param string {string}
 	 * @return {boolean}
-	 * <p>
+	 * <p>TODO
 	 */
 	'isFalseString': function (string) {
 		let bIs = false;
@@ -370,18 +423,74 @@ module.exports = {
 	 * isFunction
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'function' otherwise false.
+	 * <p>If the param is type of {@code #TYPE_FUNCTION} or the deeptype is equals {@code #TYPE_FUNCTION_OBJECT}. For
+	 * params of type GenericFunction also true is returned.
 	 */
 	'isFunction': function (obj) {
-		return (TYPE_FUNCTION === typeof obj || TYPE_FUNCTION_OBJECT === toString.call(obj))
-			|| (TYPE_GENERATOR_FUNCTION === typeof obj || TYPE_GENERATOR_FUNCTION_OBJECT === toString.call(obj));
+		// Function check
+		if (TYPE_FUNCTION === typeof obj || TYPE_FUNCTION_OBJECT === toString.call(obj)) {
+			return true;
+		}
+		// GeneratorFunction check
+		else if (this.isGeneratorFunction(obj)) {
+			return true
+		}
+		return false;
+	},
+
+	/**
+	 * isGeneratorFunction
+	 * @param obj
+	 * @return {boolean}
+	 * <p>If the param is typeof {@code #TYPE_GENERATOR_FUNCTION} or the deeptype is equals
+	 * {@code #TYPE_GENERATOR_FUNCTION_OBJECT} true is returned.
+	 * Additionaly the constructor may be checked to determine a GenericFunction.
+	 */
+	'isGeneratorFunction': function (obj) {
+		// Function check
+		if (TYPE_GENERATOR_FUNCTION === typeof obj || TYPE_GENERATOR_FUNCTION_OBJECT === toString.call(obj)) {
+			return true;
+		}
+		// Constructor type check for GenericFunction
+		else if (this.isNotEmpty(obj)) {
+			var constructor = obj.constructor;
+			if (!constructor) {
+				return false;
+			}
+			if ('GeneratorFunction' === constructor.name || 'GeneratorFunction' === constructor.displayName) {
+				return true;
+			}
+//TODO still necessary?
+			// Generator check
+			// return this.isGenerator(constructor.prototype);
+		}
+		return false;
+	},
+
+	/**
+	 * isGenerator
+	 * @param obj
+	 * @return {boolean}
+	 * <p>If the param is typeof {@code #TYPE_GENERATOR} or the deeptype is equals {@code #TYPE_GENERATOR_OBJECT} true
+	 * is returned.
+	 * Otherwise when the type of the param is GeneratorFunction, an additional Generator check will be executed.
+	 */
+	'isGenerator': function (obj) {
+		if (TYPE_GENERATOR === typeof obj || TYPE_GENERATOR_OBJECT === toString.call(obj)) {
+			return true;
+		}
+		else if (this.isGeneratorFunction(obj)) {
+			return this.isGenerator(obj.prototype);
+		}
+		return false;
 	},
 
 	/**
 	 * isJSONString
 	 * @param string
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and checks for type 'string'. If true a JSON parse tests the object. When no exeption is thrown true will be returned otherwise false.
+	 * <p>Checks for type 'string'. If true a JSON parse tries to get a json object.
+	 * When no exeption is thrown true will be returned otherwise false.
 	 * Attention: Numbers, booleans and null will also return true - these are valid JSON values!
 	 */
 	'isJSONString': function (string) {
@@ -401,7 +510,8 @@ module.exports = {
 	 * isMap
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'map' otherwise false.
+	 * <p>If the param is typeof {@code #TYPE_MAP} or the deeptype is equals {@code #TYPE_MAP_OBJECT} true is
+	 * returned.
 	 */
 	'isMap': function (obj) {
 		return (TYPE_MAP === typeof obj || TYPE_MAP_OBJECT === toString.call(obj));
@@ -442,7 +552,7 @@ module.exports = {
 	 * isNull
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'null' otherwise false.
+	 * <p>A null check is executed.
 	 */
 	'isNull': function (obj) {
 		return (null === obj);
@@ -452,9 +562,11 @@ module.exports = {
 	 * isNumeric
 	 * @param number
 	 * @returns {boolean}
-	 * <p>Checks the value for numeric type.
+	 * <p>If the param is typeof {@code #TYPE_NUMBER} or the deeptype is equals {@code #TYPE_NUMBER_OBJECT} true is
+	 * returned.
 	 */
 	'isNumeric': function (number) {
+		// TODO Is current check sufficiant?
 //		return ( (!isNaN(number) && (!isNaN(parseFloat(number))) && isFinite(number)) );
 //		return ( !isNaN(number) && 'number' === this.typeOf(number) );
 		return (TYPE_NUMBER === typeof number || TYPE_NUMBER_OBJECT === toString.call(number));
@@ -464,7 +576,8 @@ module.exports = {
 	 * isObject
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'object' otherwise false.
+	 * <p>If the param is typeof {@code #TYPE_OBJECT} or the deeptype is equals {@code #TYPE_OBJECT_OBJECT} true is
+	 * returned.
 	 */
 	'isObject': function (obj) {
 		return (TYPE_OBJECT === typeof obj || TYPE_OBJECT_OBJECT === toString.call(obj));
@@ -474,7 +587,8 @@ module.exports = {
 	 * isRegExp
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'set' otherwise false.
+	 * <p>If the param is typeof {@code #TYPE_REGEXP} or the deeptype is equals {@code #TYPE_REGEXP_OBJECT} true is
+	 * returned.
 	 */
 	'isRegExp': function (obj) {
 		return (TYPE_REGEXP=== typeof obj || TYPE_REGEXP_OBJECT === toString.call(obj));
@@ -484,7 +598,8 @@ module.exports = {
 	 * isSet
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'set' otherwise false.
+	 * <p>If the param is typeof {@code #TYPE_SET} or the deeptype is equals {@code #TYPE_SET_OBJECT} true is
+	 * returned.
 	 */
 	'isSet': function (obj) {
 		return (TYPE_SET === typeof obj || TYPE_SET_OBJECT === toString.call(obj));
@@ -494,7 +609,8 @@ module.exports = {
 	 * isString
 	 * @param string
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'string' otherwise false.
+	 * <p>If the param is typeof {@code #TYPE_STRING} or the deeptype is equals {@code #TYPE_STRING_OBJECT} true is
+	 * returned.
 	 */
 	'isString': function (string) {
 		return (TYPE_STRING === typeof string || TYPE_STRING_OBJECT === toString.call(string));
@@ -504,7 +620,8 @@ module.exports = {
 	 * isSymbol
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'symbol' otherwise false.
+	 * <p>If the param is typeof {@code #TYPE_SYMBOL} or the deeptype is equals {@code #TYPE_SYMBOL_OBJECT} true is
+	 * returned.
 	 */
 	'isSymbol': function (obj) {
 		return (TYPE_SYMBOL === typeof obj || TYPE_SYMBOL_OBJECT === toString.call(obj));
@@ -514,7 +631,7 @@ module.exports = {
 	 * isTrue
 	 * @param obj
 	 * @return {boolean}
-	 * <p>
+	 * <p>TODO
 	 */
 	'isTrue': function (obj) {
 		if (this.isBoolean(obj)) {
@@ -533,7 +650,7 @@ module.exports = {
 	 * isTrueBoolean
 	 * @param boolean {boolean}
 	 * @return {boolean}
-	 * <p>
+	 * <p>TODO
 	 */
 	'isTrueBoolean': function (boolean) {
 		return ( this.isBoolean(boolean) && ( true === boolean ) );
@@ -543,7 +660,7 @@ module.exports = {
 	 * isTrueNumber
 	 * @param number {number}
 	 * @return {boolean}
-	 * <p>
+	 * <p>TODO
 	 */
 	'isTrueNumber': function (number) {
 		let bIs = false;
@@ -567,7 +684,7 @@ module.exports = {
 	 * isTrueString
 	 * @param string {string}
 	 * @return {boolean}
-	 * <p>
+	 * <p>TODO
 	 */
 	'isTrueString': function (string) {
 		let bIs = false;
@@ -615,7 +732,7 @@ module.exports = {
 	 * isUndefined
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'undefined' otherwise false.
+	 * <p>If the param is typeof {@code #TYPE_UNDEFINED} true is returned.
 	 */
 	'isUndefined': function (obj) {
 		return (TYPE_UNDEFINED === typeof obj);
@@ -625,7 +742,8 @@ module.exports = {
 	 * isUnknown
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'unknown' otherwise false.
+	 * <p>If the param is typeof {@code #TYPE_UNKNOWN} true is returned.
+	 * This is not a valid type. It signals that there is no other successful type check the matches/evaluates the type
 	 */
 	'isUnknown': function (obj) {
 		return (TYPE_UNKNOWN === this.typeOf(obj));
@@ -635,7 +753,8 @@ module.exports = {
 	 * isWeakMap
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'weakmap' otherwise false.
+	 * <p>If the param is typeof {@code #TYPE_WEAKMAP} or the deeptype is equals {@code #TYPE_WEAKMAP_OBJECT} true is
+	 * returned.
 	 */
 	'isWeakMap': function (obj) {
 		return (TYPE_WEAKMAP === typeof obj || TYPE_WEAKMAP_OBJECT === toString.call(obj));
@@ -645,7 +764,8 @@ module.exports = {
 	 * isWeakSet
 	 * @param obj
 	 * @return {boolean}
-	 * <p>Delegates to <code>typeOf(obj)</code> and returns true if the returned type is 'weakset' otherwise false.
+	 * <p>If the param is typeof {@code #TYPE_WEAKSET} or the deeptype is equals {@code #TYPE_WEAKSET_OBJECT} true is
+	 * returned.
 	 */
 	'isWeakSet': function (obj) {
 		return (TYPE_WEAKSET === typeof obj || TYPE_WEAKSET_OBJECT === toString.call(obj));

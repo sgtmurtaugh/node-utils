@@ -16,9 +16,14 @@ const varBooleanObjectTrue = Boolean(true);
 const varDate = new Date();
 const varError = new Error("ErrorMessage");
 const varFunction = () => {};
-const varGeneraorFunction = function* () {
-    yield 1;
+const varGeneratorFunction = function * () {
+    console.log('This will be executed first.');
+    yield 'Hello World';
 };
+const varGenerator = varGeneratorFunction.prototype;
+const varJSONSStringObjectEmpty = '{}';
+const varJSONSStringObject = '{"key": "value"}';
+const varJSONSStringArray = '["val1", "val2", "val3"]';
 const varMapEmpty = new Map();
 const varMap = new Map([
     ['tomato', 10],
@@ -66,6 +71,7 @@ describe("Type Checker", function() {
             assert.isBoolean(isCaseSensitiveValuesCheck, 'isCaseSensitiveValuesCheck');
         });
     });
+
 
     describe("typeOf", function() {
         describe("checks primitive types", function() {
@@ -152,10 +158,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.typeOf(varFunction)).to.equal('function');
-//TODO                expect(typecheck.typeOf(varGeneraorFunction())).to.equal('function');
+                expect(typecheck.typeOf(varGeneratorFunction)).to.equal('function');
             });
         });
     });
+
 
     describe("isArray", function() {
         describe("checks primitive types", function() {
@@ -242,10 +249,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isArray(varFunction)).is.false;
-//TODO                expect(typecheck.isArray(varGeneraorFunction())).is.false;
+                expect(typecheck.isArray(varGeneratorFunction)).is.false;
             });
         });
     });
+
 
     describe("isBoolean", function() {
         describe("checks primitive types", function() {
@@ -299,6 +307,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isBoolean(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isBoolean(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isBoolean(varMapEmpty)).is.false;
                 expect(typecheck.isBoolean(varMap)).is.false;
@@ -332,7 +344,7 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isBoolean(varFunction)).is.false;
-//TODO                expect(typecheck.isBoolean(varGeneraorFunction())).is.false;
+                expect(typecheck.isBoolean(varGeneratorFunction)).is.false;
             });
         });
 
@@ -376,6 +388,7 @@ describe("Type Checker", function() {
             });
         });
     });
+
 
     describe("isBooleanValue", function() {
         describe("checks primitive types", function() {
@@ -429,6 +442,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isBooleanValue(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isBooleanValue(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isBooleanValue(varMapEmpty)).is.false;
                 expect(typecheck.isBooleanValue(varMap)).is.false;
@@ -462,7 +479,7 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isBooleanValue(varFunction)).is.false;
-//TODO                expect(typecheck.isBooleanValue(varGeneraorFunction())).is.false;
+                expect(typecheck.isBooleanValue(varGeneratorFunction)).is.false;
             });
         });
 
@@ -506,6 +523,7 @@ describe("Type Checker", function() {
             });
         });
     });
+
 
     describe("isDate", function() {
         describe("checks primitive types", function() {
@@ -559,6 +577,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isDate(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isDate(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isDate(varMapEmpty)).is.false;
                 expect(typecheck.isDate(varMap)).is.false;
@@ -592,10 +614,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isDate(varFunction)).is.false;
-//TODO                expect(typecheck.isDate(varGeneraorFunction())).is.false;
+                expect(typecheck.isDate(varGeneratorFunction)).is.false;
             });
         });
     });
+
 
     describe("isEmpty", function() {
         describe("checks primitive types", function() {
@@ -649,8 +672,12 @@ describe("Type Checker", function() {
                 expect(typecheck.isEmpty(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isEmpty(varGenerator)).is.false;
+            });
+
             it("Map", function () {
-                expect(typecheck.isEmpty(varMapEmpty)).is.false;
+                expect(typecheck.isEmpty(varMapEmpty)).is.true;
                 expect(typecheck.isEmpty(varMap)).is.false;
             });
 
@@ -664,28 +691,29 @@ describe("Type Checker", function() {
             });
 
             it("Set", function () {
-                expect(typecheck.isEmpty(varSetEmpty)).is.false;
+                expect(typecheck.isEmpty(varSetEmpty)).is.true;
                 expect(typecheck.isEmpty(varSet)).is.false;
             });
 
             it("WeakMap", function () {
-                expect(typecheck.isEmpty(varWeakMapEmpty)).is.false;
-                expect(typecheck.isEmpty(varWeakMap)).is.false;
+                expect(typecheck.isEmpty(varWeakMapEmpty)).is.true;
+                expect(typecheck.isEmpty(varWeakMap)).is.true;
             });
 
             it("WeakSet", function () {
-                expect(typecheck.isEmpty(varWeakSetEmpty)).is.false;
-                expect(typecheck.isEmpty(varWeakSet)).is.false;
+                expect(typecheck.isEmpty(varWeakSetEmpty)).is.true;
+                expect(typecheck.isEmpty(varWeakSet)).is.true;
             });
         });
 
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isEmpty(varFunction)).is.false;
-//TODO                expect(typecheck.isEmpty(varGeneraorFunction())).is.false;
+                expect(typecheck.isEmpty(varGeneratorFunction)).is.false;
             });
         });
     });
+
 
     describe("isEmptyString", function() {
         describe("checks primitive types", function() {
@@ -739,6 +767,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isEmptyString(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isEmptyString(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isEmptyString(varMapEmpty)).is.false;
                 expect(typecheck.isEmptyString(varMap)).is.false;
@@ -772,73 +804,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isEmptyString(varFunction)).is.false;
-//TODO                expect(typecheck.isEmptyString(varGeneraorFunction())).is.false;
+                expect(typecheck.isEmptyString(varGeneratorFunction)).is.false;
             });
         });
-
-
-
-
-
-        it("checks for array type", function () {
-            let bIsEmptyString;
-            bIsEmptyString = typecheck.isEmptyString([]);
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(42n);
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(false);
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(new Date());
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(() => {});
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(new Map());
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(null);
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(42);
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString({});
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(/\d/);
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(new Set());
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString("Hello World!");
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(Symbol('foo'));
-            expect(bIsEmptyString).is.false;
-
-            let undef;
-            bIsEmptyString = typecheck.isEmptyString(undef);
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(new WeakMap());
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString(new WeakSet());
-            expect(bIsEmptyString).is.false;
-
-            bIsEmptyString = typecheck.isEmptyString("");
-            expect(bIsEmptyString).is.true;
-
-            bIsEmptyString = typecheck.isEmptyString('');
-            expect(bIsEmptyString).is.true;
-
-        });
     });
+
 
     describe("isFalse", function() {
         describe("checks primitive types", function() {
@@ -892,6 +862,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isFalse(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isFalse(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isFalse(varMapEmpty)).is.false;
                 expect(typecheck.isFalse(varMap)).is.false;
@@ -925,7 +899,7 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isFalse(varFunction)).is.false;
-//TODO                expect(typecheck.isFalse(varGeneraorFunction())).is.false;
+                expect(typecheck.isFalse(varGeneratorFunction)).is.false;
             });
         });
 
@@ -969,6 +943,7 @@ describe("Type Checker", function() {
             });
         });
     });
+
 
     describe("isFalseBoolean", function() {
         describe("checks primitive types", function() {
@@ -1022,6 +997,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isFalseBoolean(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isFalseBoolean(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isFalseBoolean(varMapEmpty)).is.false;
                 expect(typecheck.isFalseBoolean(varMap)).is.false;
@@ -1055,7 +1034,7 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isFalseBoolean(varFunction)).is.false;
-//TODO                expect(typecheck.isFalseBoolean(varGeneraorFunction())).is.false;
+                expect(typecheck.isFalseBoolean(varGeneratorFunction)).is.false;
             });
         });
 
@@ -1099,6 +1078,7 @@ describe("Type Checker", function() {
             });
         });
     });
+
 
     describe("isFalseNumber", function() {
         describe("checks primitive types", function() {
@@ -1152,6 +1132,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isFalseNumber(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isFalseNumber(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isFalseNumber(varMapEmpty)).is.false;
                 expect(typecheck.isFalseNumber(varMap)).is.false;
@@ -1185,7 +1169,7 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isFalseNumber(varFunction)).is.false;
-//TODO                expect(typecheck.isFalseNumber(varGeneraorFunction())).is.false;
+                expect(typecheck.isFalseNumber(varGeneratorFunction)).is.false;
             });
         });
 
@@ -1229,6 +1213,7 @@ describe("Type Checker", function() {
             });
         });
     });
+
 
     describe("isFalseString", function() {
         describe("checks primitive types", function() {
@@ -1282,6 +1267,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isFalseString(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isFalseString(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isFalseString(varMapEmpty)).is.false;
                 expect(typecheck.isFalseString(varMap)).is.false;
@@ -1315,7 +1304,7 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isFalseString(varFunction)).is.false;
-//TODO                expect(typecheck.isFalseString(varGeneraorFunction())).is.false;
+                expect(typecheck.isFalseString(varGeneratorFunction)).is.false;
             });
         });
 
@@ -1359,6 +1348,7 @@ describe("Type Checker", function() {
             });
         });
     });
+
 
     describe("isFunction", function() {
         describe("checks primitive types", function() {
@@ -1412,6 +1402,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isFunction(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isFunction(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isFunction(varMapEmpty)).is.false;
                 expect(typecheck.isFunction(varMap)).is.false;
@@ -1445,10 +1439,201 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isFunction(varFunction)).is.true;
-//TODO                expect(typecheck.isFunction(varGeneraorFunction())).is.true;
+                expect(typecheck.isFunction(varGeneratorFunction)).is.true;
             });
         });
     });
+
+
+    describe("isFunction", function() {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isGeneratorFunction(varBigInt)).is.false;
+                expect(typecheck.isGeneratorFunction(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isGeneratorFunction(varBooleanFalse)).is.false;
+                expect(typecheck.isGeneratorFunction(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isGeneratorFunction(varBooleanTrue)).is.false;
+                expect(typecheck.isGeneratorFunction(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isGeneratorFunction(varNumber)).is.false;
+                expect(typecheck.isGeneratorFunction(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isGeneratorFunction(varStringEmpty)).is.false;
+                expect(typecheck.isGeneratorFunction(varString)).is.false;
+                expect(typecheck.isGeneratorFunction(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isGeneratorFunction(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isGeneratorFunction(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isGeneratorFunction(varUndefined)).is.false;
+            });
+        });
+
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isGeneratorFunction(varEmptyArray)).is.false;
+                expect(typecheck.isGeneratorFunction(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isGeneratorFunction(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isGeneratorFunction(varError)).is.false;
+            });
+
+            it("Generator", function () {
+                expect(typecheck.isGeneratorFunction(varGenerator)).is.false;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isGeneratorFunction(varMapEmpty)).is.false;
+                expect(typecheck.isGeneratorFunction(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isGeneratorFunction(varObjectEmpty)).is.false;
+                expect(typecheck.isGeneratorFunction(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isGeneratorFunction(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isGeneratorFunction(varSetEmpty)).is.false;
+                expect(typecheck.isGeneratorFunction(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isGeneratorFunction(varWeakMapEmpty)).is.false;
+                expect(typecheck.isGeneratorFunction(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isGeneratorFunction(varWeakSetEmpty)).is.false;
+                expect(typecheck.isGeneratorFunction(varWeakSet)).is.false;
+            });
+        });
+
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isGeneratorFunction(varFunction)).is.false;
+                expect(typecheck.isGeneratorFunction(varGeneratorFunction)).is.true;
+            });
+        });
+    });
+
+
+    describe("isGenerator", function() {
+        describe("checks primitive types", function() {
+            it("bigint", function () {
+                expect(typecheck.isGenerator(varBigInt)).is.false;
+                expect(typecheck.isGenerator(varBigIntObject)).is.false;
+            });
+
+            it("boolean", function () {
+                expect(typecheck.isGenerator(varBooleanFalse)).is.false;
+                expect(typecheck.isGenerator(varBooleanObjectFalse)).is.false;
+                expect(typecheck.isGenerator(varBooleanTrue)).is.false;
+                expect(typecheck.isGenerator(varBooleanObjectTrue)).is.false;
+            });
+
+            it("number", function () {
+                expect(typecheck.isGenerator(varNumber)).is.false;
+                expect(typecheck.isGenerator(varNumberObject)).is.false;
+            });
+
+            it("string", function () {
+                expect(typecheck.isGenerator(varStringEmpty)).is.false;
+                expect(typecheck.isGenerator(varString)).is.false;
+                expect(typecheck.isGenerator(varStringObject)).is.false;
+            });
+
+            it("symbol", function () {
+                expect(typecheck.isGenerator(varSymbol)).is.false;
+            });
+
+            it("null", function () {
+                expect(typecheck.isGenerator(varNull)).is.false;
+            });
+
+            it("undefined", function () {
+                expect(typecheck.isGenerator(varUndefined)).is.false;
+            });
+        });
+
+        describe("checks object type/instances", function() {
+            it("Array", function () {
+                expect(typecheck.isGenerator(varEmptyArray)).is.false;
+                expect(typecheck.isGenerator(varArray)).is.false;
+            });
+
+            it("Date", function () {
+                expect(typecheck.isGenerator(varDate)).is.false;
+            });
+
+            it("Error", function () {
+                expect(typecheck.isGenerator(varError)).is.false;
+            });
+
+            it("Generator", function () {
+                expect(typecheck.isGenerator(varGenerator)).is.true;
+            });
+
+            it("Map", function () {
+                expect(typecheck.isGenerator(varMapEmpty)).is.false;
+                expect(typecheck.isGenerator(varMap)).is.false;
+            });
+
+            it("Object", function () {
+                expect(typecheck.isGenerator(varObjectEmpty)).is.false;
+                expect(typecheck.isGenerator(varObject)).is.false;
+            });
+
+            it("RegExp", function () {
+                expect(typecheck.isGenerator(varRegExp)).is.false;
+            });
+
+            it("Set", function () {
+                expect(typecheck.isGenerator(varSetEmpty)).is.false;
+                expect(typecheck.isGenerator(varSet)).is.false;
+            });
+
+            it("WeakMap", function () {
+                expect(typecheck.isGenerator(varWeakMapEmpty)).is.false;
+                expect(typecheck.isGenerator(varWeakMap)).is.false;
+            });
+
+            it("WeakSet", function () {
+                expect(typecheck.isGenerator(varWeakSetEmpty)).is.false;
+                expect(typecheck.isGenerator(varWeakSet)).is.false;
+            });
+        });
+
+        describe("checks additional types", function() {
+            it("function", function () {
+                expect(typecheck.isGenerator(varFunction)).is.false;
+                expect(typecheck.isGenerator(varGeneratorFunction)).is.true;
+            });
+        });
+    });
+
 
     describe("isJSONString", function() {
         describe("checks primitive types", function() {
@@ -1473,10 +1658,9 @@ describe("Type Checker", function() {
                 expect(typecheck.isJSONString(varStringEmpty)).is.false;
                 expect(typecheck.isJSONString(varString)).is.false;
                 expect(typecheck.isJSONString(varStringObject)).is.false;
-//TODO Variablen definieren!
-                expect(typecheck.isJSONString('{}')).is.true;
-                expect(typecheck.isJSONString('{"key": "value"}')).is.true;
-                expect(typecheck.isJSONString('["val1", "val2", "val3"]')).is.true;
+                expect(typecheck.isJSONString(varJSONSStringObjectEmpty)).is.true;
+                expect(typecheck.isJSONString(varJSONSStringObject)).is.true;
+                expect(typecheck.isJSONString(varJSONSStringArray)).is.true;
             });
 
             it("symbol", function () {
@@ -1504,6 +1688,10 @@ describe("Type Checker", function() {
 
             it("Error", function () {
                 expect(typecheck.isJSONString(varError)).is.false;
+            });
+
+            it("Generator", function () {
+                expect(typecheck.isJSONString(varGenerator)).is.false;
             });
 
             it("Map", function () {
@@ -1539,10 +1727,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isJSONString(varFunction)).is.false;
-//TODO                expect(typecheck.isJSONString(varGeneraorFunction())).is.false;
+                expect(typecheck.isJSONString(varGeneratorFunction)).is.false;
             });
         });
     });
+
 
     describe("isNotEmpty", function() {
         describe("checks primitive types", function() {
@@ -1596,6 +1785,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isNotEmpty(varError)).is.true;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isNotEmpty(varGenerator)).is.true;
+            });
+
             it("Map", function () {
                 expect(typecheck.isNotEmpty(varMapEmpty)).is.false;
                 expect(typecheck.isNotEmpty(varMap)).is.true;
@@ -1617,22 +1810,23 @@ describe("Type Checker", function() {
 
             it("WeakMap", function () {
                 expect(typecheck.isNotEmpty(varWeakMapEmpty)).is.false;
-                expect(typecheck.isNotEmpty(varWeakMap)).is.true;
+                expect(typecheck.isNotEmpty(varWeakMap)).is.false;
             });
 
             it("WeakSet", function () {
                 expect(typecheck.isNotEmpty(varWeakSetEmpty)).is.false;
-                expect(typecheck.isNotEmpty(varWeakSet)).is.true;
+                expect(typecheck.isNotEmpty(varWeakSet)).is.false;
             });
         });
 
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isNotEmpty(varFunction)).is.true;
-//TODO                expect(typecheck.isNotEmpty(varGeneraorFunction())).is.true;
+                expect(typecheck.isNotEmpty(varGeneratorFunction)).is.true;
             });
         });
     });
+
 
     describe("isNotEmptyString", function() {
         describe("checks primitive types", function() {
@@ -1686,6 +1880,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isNotEmptyString(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isNotEmptyString(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isNotEmptyString(varMapEmpty)).is.false;
                 expect(typecheck.isNotEmptyString(varMap)).is.false;
@@ -1719,10 +1917,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isNotEmptyString(varFunction)).is.false;
-//TODO                expect(typecheck.isNotEmptyString(varGeneraorFunction())).is.false;
+                expect(typecheck.isNotEmptyString(varGeneratorFunction)).is.false;
             });
         });
     });
+
 
     describe("isNull", function() {
         describe("checks primitive types", function() {
@@ -1776,6 +1975,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isNull(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isNull(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isNull(varMapEmpty)).is.false;
                 expect(typecheck.isNull(varMap)).is.false;
@@ -1809,10 +2012,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isNull(varFunction)).is.false;
-//TODO                expect(typecheck.isNull(varGeneraorFunction())).is.false;
+                expect(typecheck.isNull(varGeneratorFunction)).is.false;
             });
         });
     });
+
 
     describe("isNumeric", function() {
         describe("checks primitive types", function() {
@@ -1866,6 +2070,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isNumeric(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isNumeric(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isNumeric(varMapEmpty)).is.false;
                 expect(typecheck.isNumeric(varMap)).is.false;
@@ -1899,10 +2107,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isNumeric(varFunction)).is.false;
-//TODO                expect(typecheck.isNumeric(varGeneraorFunction())).is.false;
+                expect(typecheck.isNumeric(varGeneratorFunction)).is.false;
             });
         });
     });
+
 
     describe("isObject", function() {
         describe("checks primitive types", function() {
@@ -1956,6 +2165,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isObject(varError)).is.true;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isObject(varGenerator)).is.true;
+            });
+
             it("Map", function () {
                 expect(typecheck.isObject(varMapEmpty)).is.true;
                 expect(typecheck.isObject(varMap)).is.true;
@@ -1989,10 +2202,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isObject(varFunction)).is.false;
-//TODO                expect(typecheck.isObject(varGeneraorFunction())).is.false;
+                expect(typecheck.isObject(varGeneratorFunction)).is.false;
             });
         });
     });
+
 
     describe("isString", function() {
         describe("checks primitive types", function() {
@@ -2046,6 +2260,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isString(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isString(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isString(varMapEmpty)).is.false;
                 expect(typecheck.isString(varMap)).is.false;
@@ -2079,10 +2297,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isString(varFunction)).is.false;
-//TODO                expect(typecheck.isString(varGeneraorFunction())).is.false;
+                expect(typecheck.isString(varGeneratorFunction)).is.false;
             });
         });
     });
+
 
     describe("isSymbol", function() {
         describe("checks primitive types", function() {
@@ -2136,6 +2355,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isSymbol(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isSymbol(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isSymbol(varMapEmpty)).is.false;
                 expect(typecheck.isSymbol(varMap)).is.false;
@@ -2169,10 +2392,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isSymbol(varFunction)).is.false;
-//TODO                expect(typecheck.isSymbol(varGeneraorFunction())).is.false;
+                expect(typecheck.isSymbol(varGeneratorFunction)).is.false;
             });
         });
     });
+
 
     describe("isTrue", function() {
         describe("checks primitive types", function() {
@@ -2226,6 +2450,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isTrue(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isTrue(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isTrue(varMapEmpty)).is.false;
                 expect(typecheck.isTrue(varMap)).is.false;
@@ -2259,7 +2487,7 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isTrue(varFunction)).is.false;
-//TODO                expect(typecheck.isTrue(varGeneraorFunction())).is.false;
+                expect(typecheck.isTrue(varGeneratorFunction)).is.false;
             });
         });
 
@@ -2303,6 +2531,7 @@ describe("Type Checker", function() {
             });
         });
     });
+
 
     describe("isTrueBoolean", function() {
         describe("checks primitive types", function() {
@@ -2356,6 +2585,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isTrueBoolean(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isTrueBoolean(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isTrueBoolean(varMapEmpty)).is.false;
                 expect(typecheck.isTrueBoolean(varMap)).is.false;
@@ -2389,7 +2622,7 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isTrueBoolean(varFunction)).is.false;
-//TODO                expect(typecheck.isTrueBoolean(varGeneraorFunction())).is.false;
+                expect(typecheck.isTrueBoolean(varGeneratorFunction)).is.false;
             });
         });
 
@@ -2433,6 +2666,7 @@ describe("Type Checker", function() {
             });
         });
     });
+
 
     describe("isTrueNumber", function() {
         describe("checks primitive types", function() {
@@ -2486,6 +2720,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isTrueNumber(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isTrueNumber(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isTrueNumber(varMapEmpty)).is.false;
                 expect(typecheck.isTrueNumber(varMap)).is.false;
@@ -2519,7 +2757,7 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isTrueNumber(varFunction)).is.false;
-//TODO                expect(typecheck.isTrueNumber(varGeneraorFunction())).is.false;
+                expect(typecheck.isTrueNumber(varGeneratorFunction)).is.false;
             });
         });
 
@@ -2563,6 +2801,7 @@ describe("Type Checker", function() {
             });
         });
     });
+
 
     describe("isTrueString", function() {
         describe("checks primitive types", function() {
@@ -2616,6 +2855,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isTrueString(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isTrueString(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isTrueString(varMapEmpty)).is.false;
                 expect(typecheck.isTrueString(varMap)).is.false;
@@ -2649,7 +2892,7 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isTrueString(varFunction)).is.false;
-//TODO                expect(typecheck.isTrueString(varGeneraorFunction())).is.false;
+                expect(typecheck.isTrueString(varGeneratorFunction)).is.false;
             });
         });
 
@@ -2693,6 +2936,7 @@ describe("Type Checker", function() {
             });
         });
     });
+
 
     describe("isUndefined", function() {
         describe("checks primitive types", function() {
@@ -2746,6 +2990,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isUndefined(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isUndefined(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isUndefined(varMapEmpty)).is.false;
                 expect(typecheck.isUndefined(varMap)).is.false;
@@ -2779,10 +3027,11 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isUndefined(varFunction)).is.false;
-//TODO                expect(typecheck.isUndefined(varGeneraorFunction())).is.false;
+                expect(typecheck.isUndefined(varGeneratorFunction)).is.false;
             });
         });
     });
+
 
     describe("isUnknown", function() {
         describe("checks primitive types", function() {
@@ -2836,6 +3085,10 @@ describe("Type Checker", function() {
                 expect(typecheck.isUnknown(varError)).is.false;
             });
 
+            it("Generator", function () {
+                expect(typecheck.isUnknown(varGenerator)).is.false;
+            });
+
             it("Map", function () {
                 expect(typecheck.isUnknown(varMapEmpty)).is.false;
                 expect(typecheck.isUnknown(varMap)).is.false;
@@ -2869,7 +3122,7 @@ describe("Type Checker", function() {
         describe("checks additional types", function() {
             it("function", function () {
                 expect(typecheck.isUnknown(varFunction)).is.false;
-//TODO                expect(typecheck.isUnknown(varGeneraorFunction())).is.false;
+                expect(typecheck.isUnknown(varGeneratorFunction)).is.false;
             });
         });
     });
