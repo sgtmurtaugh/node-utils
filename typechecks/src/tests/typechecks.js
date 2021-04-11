@@ -350,14 +350,28 @@ describe("Type Checker", function() {
 
         describe("check false value objects", function() {
             it("characters", function () {
-                for ( let falseChar of typecheck.getConfig().falseValues.character ) {
-                    expect(typecheck.isBoolean(falseChar)).is.false;
+                if ( typecheck.isNotEmpty(typecheck.getConfig().falseValues)
+                    && typecheck.isNotEmpty(typecheck.getConfig().falseValues.character) ) {
+
+                    if ( typecheck.isArray(typecheck.getConfig().falseValues.character) ) {
+                        for ( let falseChar of typecheck.getConfig().falseValues.character ) {
+                            expect(typecheck.isBoolean(falseChar)).is.false;
+                        }
+                    }
+                    else {
+                        expect(typecheck.isBoolean(typecheck.getConfig().falseValues.character)).is.false;
+                    }
                 }
             });
 
             it("numbers", function () {
-                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
-                    expect(typecheck.isBoolean(falseNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().falseValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                        expect(typecheck.isBoolean(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isBoolean(typecheck.getConfig().falseValues.numeric)).is.false;
                 }
             });
 
@@ -376,8 +390,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
-                    expect(typecheck.isBoolean(trueNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().trueValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().trueValues.numeric ) {
+                        expect(typecheck.isBoolean(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isBoolean(typecheck.getConfig().trueValues.numeric)).is.false;
                 }
             });
 
@@ -491,8 +510,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
-                    expect(typecheck.isBooleanValue(falseNumber)).is.true;
+                if (typecheck.isArray(typecheck.getConfig().falseValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                        expect(typecheck.isBooleanValue(falseNumber)).is.true;
+                    }
+                }
+                else {
+                    expect(typecheck.isBooleanValue(typecheck.getConfig().falseValues.numeric)).is.true;
                 }
             });
 
@@ -511,8 +535,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
-                    expect(typecheck.isBooleanValue(trueNumber)).is.true;
+                if (typecheck.isArray(typecheck.getConfig().trueValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().trueValues.numeric ) {
+                        expect(typecheck.isBooleanValue(falseNumber)).is.true;
+                    }
+                }
+                else {
+                    expect(typecheck.isBooleanValue(typecheck.getConfig().trueValues.numeric)).is.true;
                 }
             });
 
@@ -911,8 +940,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
-                    expect(typecheck.isFalse(falseNumber)).is.true;
+                if (typecheck.isArray(typecheck.getConfig().falseValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                        expect(typecheck.isFalse(falseNumber)).is.true;
+                    }
+                }
+                else {
+                    expect(typecheck.isFalse(typecheck.getConfig().falseValues.numeric)).is.true;
                 }
             });
 
@@ -931,8 +965,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
-                    expect(typecheck.isFalse(trueNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().trueValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().trueValues.numeric ) {
+                        expect(typecheck.isFalse(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isFalse(typecheck.getConfig().trueValues.numeric)).is.false;
                 }
             });
 
@@ -1046,8 +1085,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
-                    expect(typecheck.isFalseBoolean(falseNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().falseValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                        expect(typecheck.isFalseBoolean(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isFalseBoolean(typecheck.getConfig().falseValues.numeric)).is.false;
                 }
             });
 
@@ -1066,8 +1110,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
-                    expect(typecheck.isFalseBoolean(trueNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().trueValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().trueValues.numeric ) {
+                        expect(typecheck.isFalseBoolean(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isFalseBoolean(typecheck.getConfig().trueValues.numeric)).is.false;
                 }
             });
 
@@ -1181,8 +1230,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
-                    expect(typecheck.isFalseNumber(falseNumber)).is.true;
+                if (typecheck.isArray(typecheck.getConfig().falseValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                        expect(typecheck.isFalseNumber(falseNumber)).is.true;
+                    }
+                }
+                else {
+                    expect(typecheck.isFalseNumber(typecheck.getConfig().falseValues.numeric)).is.true;
                 }
             });
 
@@ -1201,8 +1255,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
-                    expect(typecheck.isFalseNumber(trueNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().trueValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().trueValues.numeric ) {
+                        expect(typecheck.isFalseNumber(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isFalseNumber(typecheck.getConfig().trueValues.numeric)).is.false;
                 }
             });
 
@@ -1316,8 +1375,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
-                    expect(typecheck.isFalseString(falseNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().falseValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                        expect(typecheck.isFalseString(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isFalseString(typecheck.getConfig().falseValues.numeric)).is.false;
                 }
             });
 
@@ -1336,8 +1400,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
-                    expect(typecheck.isFalseString(trueNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().trueValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().trueValues.numeric ) {
+                        expect(typecheck.isFalseString(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isFalseString(typecheck.getConfig().trueValues.numeric)).is.false;
                 }
             });
 
@@ -2499,8 +2568,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
-                    expect(typecheck.isTrue(falseNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().falseValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                        expect(typecheck.isTrue(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isTrue(typecheck.getConfig().falseValues.numeric)).is.false;
                 }
             });
 
@@ -2519,8 +2593,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
-                    expect(typecheck.isTrue(trueNumber)).is.true;
+                if (typecheck.isArray(typecheck.getConfig().trueValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().trueValues.numeric ) {
+                        expect(typecheck.isTrue(falseNumber)).is.true;
+                    }
+                }
+                else {
+                    expect(typecheck.isTrue(typecheck.getConfig().trueValues.numeric)).is.true;
                 }
             });
 
@@ -2634,8 +2713,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
-                    expect(typecheck.isTrueBoolean(falseNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().falseValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                        expect(typecheck.isTrueBoolean(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isTrueBoolean(typecheck.getConfig().falseValues.numeric)).is.false;
                 }
             });
 
@@ -2654,8 +2738,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
-                    expect(typecheck.isTrueBoolean(trueNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().trueValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().trueValues.numeric ) {
+                        expect(typecheck.isTrueBoolean(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isTrueBoolean(typecheck.getConfig().trueValues.numeric)).is.false;
                 }
             });
 
@@ -2769,8 +2858,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
-                    expect(typecheck.isTrueNumber(falseNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().falseValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                        expect(typecheck.isTrueNumber(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isTrueNumber(typecheck.getConfig().falseValues.numeric)).is.false;
                 }
             });
 
@@ -2789,8 +2883,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
-                    expect(typecheck.isTrueNumber(trueNumber)).is.true;
+                if (typecheck.isArray(typecheck.getConfig().trueValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().trueValues.numeric ) {
+                        expect(typecheck.isTrueNumber(falseNumber)).is.true;
+                    }
+                }
+                else {
+                    expect(typecheck.isTrueNumber(typecheck.getConfig().trueValues.numeric)).is.true;
                 }
             });
 
@@ -2904,8 +3003,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
-                    expect(typecheck.isTrueString(falseNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().falseValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().falseValues.numeric ) {
+                        expect(typecheck.isTrueString(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isTrueString(typecheck.getConfig().falseValues.numeric)).is.false;
                 }
             });
 
@@ -2924,8 +3028,13 @@ describe("Type Checker", function() {
             });
 
             it("numbers", function () {
-                for ( let trueNumber of typecheck.getConfig().trueValues.numeric ) {
-                    expect(typecheck.isTrueString(trueNumber)).is.false;
+                if (typecheck.isArray(typecheck.getConfig().trueValues.numeric)) {
+                    for ( let falseNumber of typecheck.getConfig().trueValues.numeric ) {
+                        expect(typecheck.isTrueString(falseNumber)).is.false;
+                    }
+                }
+                else {
+                    expect(typecheck.isTrueString(typecheck.getConfig().trueValues.numeric)).is.false;
                 }
             });
 

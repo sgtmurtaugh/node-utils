@@ -41,9 +41,26 @@ const TYPE_WEAKSET_OBJECT = '[object WeakSet]';
 
 module.exports = {
 
+	'_isBooleanNumber': function (number, comparisonBase) {
+		let bIs = false;
+
+		if (this.isNumeric(number)) {
+			if (this.isArray(comparisonBase)) {
+				for (var numericBool of comparisonBase) {
+
+					if ( (bIs = (numericBool === number)) ) break;
+				}
+			}
+			else {
+				bIs = (comparisonBase === number);
+			}
+		}
+		return bIs;
+	},
+
 	/**
 	 * getConfig
-	 * @returns {Config}
+	 * @returns {Object}
 	 * <p>Returns the loaded config Object
 	 */
 	'getConfig': function () {
@@ -355,20 +372,21 @@ module.exports = {
 	 * <p>TODO
 	 */
 	'isFalseNumber': function (number) {
-		let bIs = false;
-
-		if (this.isNumeric(number)) {
-			if (this.isArray(config.falseValues.numeric)) {
-				for (var numericBool of config.falseValues.numeric) {
-
-					if ( (bIs = (numericBool == number)) ) break;
-				}
-			}
-			else {
-				bIs = (config.falseValues.numeric == number);
-			}
-		}
-		return bIs;
+		return this._isBooleanNumber(number, config.falseValues.numeric);
+		// let bIs = false;
+		//
+		// if (this.isNumeric(number)) {
+		// 	if (this.isArray(config.falseValues.numeric)) {
+		// 		for (var numericBool of config.falseValues.numeric) {
+		//
+		// 			if ( (bIs = (numericBool == number)) ) break;
+		// 		}
+		// 	}
+		// 	else {
+		// 		bIs = (config.falseValues.numeric == number);
+		// 	}
+		// }
+		// return bIs;
 	},
 
 	/**
@@ -663,21 +681,22 @@ module.exports = {
 	 * <p>TODO
 	 */
 	'isTrueNumber': function (number) {
-		let bIs = false;
-
-		if (this.isNumeric(number)) {
-			if (this.isArray(config.trueValues.numeric)) {
-				for (var numericBool of config.trueValues.numeric) {
-
-					if ( (bIs = (numericBool == number)) )
-						break;
-				}
-			}
-			else {
-				bIs = (config.trueValues.numeric == number);
-			}
-		}
-		return bIs;
+		return this._isBooleanNumber(number, config.trueValues.numeric);
+		// let bIs = false;
+		//
+		// if (this.isNumeric(number)) {
+		// 	if (this.isArray(config.trueValues.numeric)) {
+		// 		for (var numericBool of config.trueValues.numeric) {
+		//
+		// 			if ( (bIs = (numericBool == number)) )
+		// 				break;
+		// 		}
+		// 	}
+		// 	else {
+		// 		bIs = (config.trueValues.numeric == number);
+		// 	}
+		// }
+		// return bIs;
 	},
 
 	/**
