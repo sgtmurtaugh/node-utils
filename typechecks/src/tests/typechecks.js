@@ -1,6 +1,6 @@
 const expect    = require("chai").expect;
 const assert    = require("chai").assert;
-const typecheck = require("../../app/index");
+const typecheck = require("../../lib/index");
 
 /*
   Test Variables

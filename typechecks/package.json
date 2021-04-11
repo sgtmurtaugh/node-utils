@@ -1,6 +1,28 @@
 {
-  "name": "typechecks",
-  "version": "0.0.2",
+  "name": "@node-utils/typechecks",
+  "version": "0.1.0",
+  "description": "A utility library for type checks.",
+  "main": "lib/index.js",
+  "author": "Carsten Kraus <sgtmurtaugh@gmx.de>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sgtmurtaugh/node-utils.git",
+    "directory": "typechecks"
+  },
+  "homepage": "https://github.com/sgtmurtaugh/node-utils/wiki",
+  "bugs": "https://github.com/sgtmurtaugh/node-utils/issues",
+  "keywords": [
+    "typecheck",
+    "type",
+    "check"
+  ],
+  "engines": {
+    "node": ">=7.6.0"
+  },
   "dependencies": {
     "config": "^3.3.6",
     "express": "^4.17.1"
